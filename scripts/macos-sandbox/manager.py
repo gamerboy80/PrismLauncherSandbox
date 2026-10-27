@@ -838,6 +838,7 @@ class NativeLoaderAdapter:
             "fec83601d2da127234728a8fffb429d0c4a59587452834da203163e6a3f941db": "weblite-1.0.0",
             "a58a84c4271e50df4c96ed916ccb7e48a869f8ed9cdcda1ad5d3d4c33b0214a3": "lz4-java-library-path-1.10.1-v1",
             "d74a3334fb35195009b338a951f918203d6bbca3d1d359033dc33edd1cadc9ef": "lz4-java-library-path-1.8.0-v1",
+            "1de8ff91b90fba9d4896b8617ed3594c2e4390d321d5a92c34f80e62e406c1b0": "lz4-java-library-path-1.8.1-v1",
         }
         if artifact.get("sha256") in pinned:
             return pinned[artifact["sha256"]]

@@ -166,6 +166,16 @@ class ManagerTests(unittest.TestCase):
         self.assertFalse(any((self.root / "staging").glob("inventory-*/build")))
         self.assertFalse(any((self.root / "manager/approvals").glob("*.json")))
 
+    def test_lz4_181_adapter_requires_exact_reviewed_bytes(self):
+        artifact = {"source": "/libraries/at/yawk/lz4/lz4-java/1.8.1/lz4-java-1.8.1.jar",
+                    "hasNatives": True, "hasClasses": True,
+                    "sha256": "1de8ff91b90fba9d4896b8617ed3594c2e4390d321d5a92c34f80e62e406c1b0"}
+        self.assertEqual(manager.NativeLoaderAdapter.classify(artifact), "lz4-java-library-path-1.8.1-v1")
+        manager.NativeLoaderAdapter.validate(artifact)
+        artifact["sha256"] = "0" * 64
+        with self.assertRaisesRegex(manager.SandboxError, "Unsupported native loading mechanism"):
+            manager.NativeLoaderAdapter.validate(artifact)
+
     def test_native_module_descriptor_does_not_prevent_resource_only_detection(self):
         jar = self.archive("lwjgl-native.jar", {"META-INF/versions/9/module-info.class": b"module descriptor",
                                                "libexample.dylib": fake_macho()})
