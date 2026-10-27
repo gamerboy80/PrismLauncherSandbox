@@ -67,6 +67,8 @@ class ChecksumValidator : public Validator {
     auto hash() -> QByteArray { return m_checksum.result(); }
 
     void setExpected(QByteArray expected) { m_expected = std::move(expected); }
+    QByteArray expected() const { return m_expected; }
+    QCryptographicHash::Algorithm algorithm() const { return m_checksum.algorithm(); }
 
    private:
     QCryptographicHash m_checksum;

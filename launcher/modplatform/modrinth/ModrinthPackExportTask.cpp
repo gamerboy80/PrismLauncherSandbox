@@ -17,6 +17,7 @@
  */
 
 #include "ModrinthPackExportTask.h"
+#include "FileSystem.h"
 
 #include <QCoreApplication>
 #include <QCryptographicHash>
@@ -105,17 +106,12 @@ void ModrinthPackExportTask::collectHashes()
             continue;
         }
 
-        QFile openFile(file.absoluteFilePath());
-        if (!openFile.open(QFile::ReadOnly)) {
-            qWarning() << "Could not open" << file << "for hashing:" << openFile.errorString();
+        const auto content = FS::read(file.absoluteFilePath());
+        if (!content) {
+            qWarning() << "Could not safely read" << file << "for hashing";
             continue;
         }
-
-        const QByteArray data = openFile.readAll();
-        if (openFile.error() != QFileDevice::NoError) {
-            qWarning() << "Could not read" << file << "error:" << openFile.errorString();
-            continue;
-        }
+        const QByteArray data = *content;
         auto sha512 = Hashing::hash(data, Hashing::Algorithm::Sha512);
 
         auto allMods = instance->loaderModList()->allMods();
@@ -130,7 +126,7 @@ void ModrinthPackExportTask::collectHashes()
 
                     auto sha1 = Hashing::hash(data, Hashing::Algorithm::Sha1);
 
-                    ResolvedFile resolvedFile{ sha1, sha512, url.toEncoded(), openFile.size(), mod->metadata()->side };
+                    ResolvedFile resolvedFile{ sha1, sha512, url.toEncoded(), data.size(), mod->metadata()->side };
                     resolvedFiles[relative] = resolvedFile;
 
                     // nice! we've managed to resolve based on local metadata!

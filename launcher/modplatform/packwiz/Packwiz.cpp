@@ -1,3 +1,6 @@
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+#include "macsandbox/manager/SandboxFileAccess.h"
+#endif
 // SPDX-License-Identifier: GPL-3.0-only
 /*
  *  Prism Launcher - Minecraft Launcher
@@ -40,6 +43,7 @@ namespace Packwiz {
 namespace {
 auto getRealIndexName(const QDir& indexDir, const QString& normalizedFname, bool shouldFindMatch = false) -> QString
 {
+    if (normalizedFname.isEmpty()) return {};
     const QFile indexFile(indexDir.absoluteFilePath(normalizedFname));
 
     QString realFname = normalizedFname;
@@ -65,6 +69,9 @@ auto getRealIndexName(const QDir& indexDir, const QString& normalizedFname, bool
 // Helpers
 auto indexFileName(const QString& modSlug) -> QString
 {
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    if (!SandboxFileAccess::safeRelativePath(modSlug) || modSlug.contains('/')) return {};
+#endif
     if (modSlug.endsWith(".pw.toml")) {
         return modSlug;
     }
@@ -152,23 +159,31 @@ void V1::updateModIndex(const QDir& indexDir, Mod& mod)
     // Ensure the corresponding mod's info exists, and create it if not
 
     auto normalizedFname = indexFileName(mod.slug);
+    if (normalizedFname.isEmpty()) return;
     auto realFname = getRealIndexName(indexDir, normalizedFname);
 
     QFile indexFile(indexDir.absoluteFilePath(realFname));
 
     if (realFname != normalizedFname) {
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+        if (!FS::move(indexFile.fileName(), indexDir.absoluteFilePath(normalizedFname))) return;
+        indexFile.setFileName(indexDir.absoluteFilePath(normalizedFname));
+#else
         indexFile.rename(normalizedFname);
+#endif
     }
 
     // There's already data on there!
     // TODO: We should do more stuff here, as the user is likely trying to
     // override a file. In this case, check versions and ask the user what
     // they want to do!
+#ifndef PRISM_MACOS_SANDBOX_MANAGER
     if (indexFile.exists()) {
         indexFile.remove();
     } else {
         FS::ensureFilePathExists(indexFile.fileName());
     }
+#endif
 
     toml::table update;
     switch (mod.provider) {
@@ -203,11 +218,13 @@ void V1::updateModIndex(const QDir& indexDir, Mod& mod)
         mcVersions.push_back(version.toStdString());
     }
 
+#ifndef PRISM_MACOS_SANDBOX_MANAGER
     if (!indexFile.open(QIODevice::ReadWrite)) {
         qCritical() << "Could not open file" << normalizedFname << "error:" << indexFile.errorString();
         return;
     }
 
+#endif
     toml::array deps;
     for (const auto& dep : mod.dependencies) {
         auto tbl = toml::table{ { "addonId", dep.addonId.toString().toStdString() }, { "type", dep.type.toString().toStdString() } };
@@ -218,7 +235,12 @@ void V1::updateModIndex(const QDir& indexDir, Mod& mod)
     }
 
     // Put TOML data into the file
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    QByteArray serialized;
+    QTextStream inStream(&serialized);
+#else
     QTextStream inStream(&indexFile);
+#endif
     {
         auto tbl = toml::table{ { "name", mod.name.toStdString() },
                                 { "filename", mod.filename.toStdString() },
@@ -242,8 +264,13 @@ void V1::updateModIndex(const QDir& indexDir, Mod& mod)
         inStream << QString::fromStdString(ss.str());
     }
 
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    inStream.flush();
+    if (!FS::write(indexFile.fileName(), serialized)) qWarning() << "Cannot safely write mod metadata";
+#else
     indexFile.flush();
     indexFile.close();
+#endif
 }
 
 void V1::deleteModIndex(const QDir& indexDir, QString& modSlug)
@@ -261,7 +288,7 @@ void V1::deleteModIndex(const QDir& indexDir, QString& modSlug)
         return;
     }
 
-    if (!indexFile.remove()) {
+    if (!FS::deletePath(indexFile.fileName())) {
         qWarning() << QString("Failed to remove metadata for mod %1!").arg(modSlug);
     }
 }
@@ -276,20 +303,31 @@ auto V1::getIndexForMod(const QDir& indexDir, const QString& slug) -> Mod
         return {};
     }
 
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    auto content = FS::read(indexDir.absoluteFilePath(realFname));
+    if (!content) return {};
+#endif
+    auto parseMetadata = [&] {
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+        return toml::parse(std::string_view(content->constData(), content->size()));
+#else
+        return toml::parse_file(StringUtils::toStdString(indexDir.absoluteFilePath(realFname)));
+#endif
+    };
     toml::table table;
 #if TOML_EXCEPTIONS
     // Catch std::exception instead of toml::parse_error to work around
     // the latter not being caught here when compiled with libc++.
     // See https://github.com/PrismLauncher/PrismLauncher/issues/6047.
     try {
-        table = toml::parse_file(StringUtils::toStdString(indexDir.absoluteFilePath(realFname)));
+        table = parseMetadata();
     } catch (const std::exception& err) {
         qWarning() << QString("Could not open file %1!").arg(normalizedFname);
         qWarning() << "Reason:" << QString(err.what());
         return {};
     }
 #else
-    toml::parse_result result = toml::parse_file(StringUtils::toStdString(indexDir.absoluteFilePath(realFname)));
+    toml::parse_result result = parseMetadata();
     if (!result) {
         qWarning() << QString("Could not open file %1!").arg(normalizedFname);
         qWarning() << "Reason:" << result.error().description();

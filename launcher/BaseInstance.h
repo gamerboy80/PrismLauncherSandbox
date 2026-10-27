@@ -115,6 +115,9 @@ class BaseInstance : public QObject {
     void regenerateUuid();
 
     void setMinecraftRunning(bool running);
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    void resumeMinecraftRunning(qint64 startMilliseconds);
+#endif
     void setRunning(bool running);
     bool isRunning() const;
     int64_t totalTimePlayed() const;

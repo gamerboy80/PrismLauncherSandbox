@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "run": "46d9fadf-d136-4905-ba34-c94c3c8e2bcd",
+  "exit": {
+    "stopped": true,
+    "exitCode": -1,
+    "signal": 15
+  },
+  "events": [
+    "Hello",
+    "Ready",
+    "Pong",
+    "Started",
+    "Exited"
+  ],
+  "stdout": "",
+  "stderr": "",
+  "control": "/private/tmp/prism-sandbox-6okr8hv1/instances/probe/.prism-control/46d9fadf-d136-4905-ba34-c94c3c8e2bcd",
+  "app": "/private/tmp/prism-sandbox-6okr8hv1/apps/4c6682f3050849dd82446826f93ec6ce/f3523e5c0f2a4900f29d0e6c/Game.app"
+}

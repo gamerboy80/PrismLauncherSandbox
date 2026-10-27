@@ -20,6 +20,9 @@
 #include <minecraft/auth/AuthSession.h>
 
 #include "MinecraftTarget.h"
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+#include "macsandbox/manager/SandboxLaunchController.h"
+#endif
 
 class LauncherPartLaunch : public LaunchStep {
     Q_OBJECT
@@ -41,6 +44,9 @@ class LauncherPartLaunch : public LaunchStep {
 
    private:
     LoggedProcess m_process;
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    std::unique_ptr<SandboxLaunchController> m_sandbox;
+#endif
     QString m_command;
     AuthSessionPtr m_session;
     QString m_launchScript;

@@ -177,11 +177,16 @@ QByteArray getDatDataFromFS(const QFileInfo& root, QString file)
     if (fullFilePath.isNull()) {
         return QByteArray();
     }
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    auto data = FS::read(fullFilePath);
+    return data ? *data : QByteArray();
+#else
     QFile f(fullFilePath);
     if (!f.open(QIODevice::ReadOnly)) {
         return QByteArray();
     }
     return f.readAll();
+#endif
 }
 
 QByteArray getLevelDatDataFromFS(const QFileInfo& file)
@@ -257,7 +262,7 @@ bool World::resetIcon()
     if (m_iconFile.isNull()) {
         return false;
     }
-    if (QFile(m_iconFile).remove()) {
+    if (FS::deletePath(m_iconFile)) {
         m_iconFile = QString();
         return true;
     }
@@ -372,7 +377,11 @@ bool World::rename(const QString& newName)
     parentDir.cdUp();
     QFile container(m_containerFile.absoluteFilePath());
     auto dirName = FS::DirNameFromString(m_actualName, { parentDir.absolutePath() });
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    if (!FS::move(m_containerFile.absoluteFilePath(), parentDir.absoluteFilePath(dirName))) return false;
+#else
     container.rename(parentDir.absoluteFilePath(dirName));
+#endif
 
     return true;
 }
@@ -525,6 +534,9 @@ bool World::destroy()
 
     if (FS::trash(m_containerFile.filePath()))
         return true;
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    return FS::deletePath(m_containerFile.filePath());
+#else
 
     if (m_containerFile.isDir()) {
         QDir d(m_containerFile.filePath());
@@ -534,6 +546,7 @@ bool World::destroy()
         return file.remove();
     }
     return true;
+#endif
 }
 
 bool World::operator==(const World& other) const

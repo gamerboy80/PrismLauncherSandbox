@@ -44,5 +44,8 @@ class ArchiveWriter {
     struct archive* m_archive = nullptr;
     QString m_filename;
     QString m_format = "zip";
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    QString m_sandboxTarget;
+#endif
 };
 }  // namespace MMCZip

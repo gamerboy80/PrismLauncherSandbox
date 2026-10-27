@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "passed": true,
+  "manager": "install-macos-sandbox-manager/PrismLauncher.app",
+  "results": [
+    {
+      "label": "standalone-manifest",
+      "nativeApprovalFingerprint": "e851bb2f56e7c14c70b7c2bc03fc908a46c50c2185feb9927524c34422010d95",
+      "exit": {
+        "stopped": false,
+        "generation": "7c4b77775673bbe14edc9ff0",
+        "signal": 0,
+        "exitCode": 0,
+        "version": 1
+      },
+      "passed": true
+    },
+    {
+      "label": "replacement-explicit-arguments",
+      "nativeApprovalFingerprint": "f533d2cfaa15b1c1cb6b46b91a385ad016762865a94fbf1c15e2bdc14cb17fbc",
+      "exit": {
+        "stopped": false,
+        "generation": "dcc41b526fcc67e94b1838f4",
+        "signal": 0,
+        "exitCode": 0,
+        "version": 1
+      },
+      "passed": true
+    }
+  ]
+}

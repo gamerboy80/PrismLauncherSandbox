@@ -48,6 +48,10 @@
 #include <QFileSystemWatcher>
 #include <QShortcut>
 #include <QUrl>
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+#include "macsandbox/manager/SandboxFileAccess.h"
+#include <unistd.h>
+#endif
 
 OtherLogsPage::OtherLogsPage(QString id, QString displayName, QString helpPage, BaseInstance* instance, QWidget* parent)
     : QWidget(parent)
@@ -256,7 +260,18 @@ void OtherLogsPage::reload()
     }
 
     QFile file(FS::PathCombine(m_basePath, m_currentFile));
-    if (!file.open(QFile::ReadOnly)) {
+    bool opened = false;
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    if (SandboxFileAccess::instancePath(file.fileName())) {
+        const int descriptor = SandboxFileAccess::openRead(file.fileName());
+        if (descriptor >= 0) {
+            opened = file.open(descriptor, QIODevice::ReadOnly, QFileDevice::AutoCloseHandle);
+            if (!opened) ::close(descriptor);
+        }
+    } else
+#endif
+    opened = file.open(QFile::ReadOnly);
+    if (!opened) {
         setControlsEnabled(false);
         ui->btnReload->setEnabled(true);  // allow reload
         m_currentFile = QString();
@@ -406,7 +421,7 @@ void OtherLogsPage::on_btnDelete_clicked()
         return;
     }
 
-    if (!file.remove()) {
+    if (!FS::deletePath(file.fileName())) {
         QMessageBox::critical(this, tr("Error"), tr("Unable to delete %1: %2").arg(m_currentFile, file.errorString()));
     }
 }
@@ -442,7 +457,7 @@ void OtherLogsPage::on_btnClean_clicked()
         if (FS::trash(file.fileName())) {
             continue;
         }
-        if (!file.remove()) {
+        if (!FS::deletePath(file.fileName())) {
             failed.push_back(item);
         }
     }

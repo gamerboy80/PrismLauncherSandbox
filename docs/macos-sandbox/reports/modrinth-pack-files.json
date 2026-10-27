@@ -1,0 +1,252 @@
+{
+  "version": 1,
+  "project": "1KVo5zza",
+  "packVersion": "LpdvzsNf",
+  "files": [
+    {
+      "name": "CITResewn-1.1.3+1.20.jar",
+      "sha256": "a931051d6cb1c10d745d9a158016bdb42e3639c47c0b91e8347311e259bcd0ab",
+      "size": 394652
+    },
+    {
+      "name": "Controlify-1.6.0+1.20.jar.disabled",
+      "sha256": "dc15458c8b628ae500533cab988122512ab58c0206ee49e253db837dbfa35eb7",
+      "size": 1937626
+    },
+    {
+      "name": "Debugify-1.20.1+2.0.jar",
+      "sha256": "c61b78a7609c989578e98837047bc026d32654a0ad55f9118bb35f295536949d",
+      "size": 337545
+    },
+    {
+      "name": "ImmediatelyFast-1.2.1+1.20.1.jar",
+      "sha256": "24266f54606b5eb6333298c0c89effb3a2b91929bdab93b78d0b3c078cddbe3a",
+      "size": 619352
+    },
+    {
+      "name": "NoChatReports-FABRIC-1.20.1-v2.2.2.jar",
+      "sha256": "8ff70525b0fbc5fa7592424872aa8092db1f7646d53817590bd9f9b88c75babc",
+      "size": 619812
+    },
+    {
+      "name": "Rrls-3.2.0-1.20.1-fabric.jar",
+      "sha256": "a1c50d25aea1f8ce4bd8fc919a86e0b8c7ae944b482461d0dd07892a43ba3c59",
+      "size": 138928
+    },
+    {
+      "name": "Zoomify-2.11.2.jar",
+      "sha256": "c54c3cf2b63f49e2c8da01f27e9288f6e73a860cbd3a2caff8b03cf95aa05e45",
+      "size": 999881
+    },
+    {
+      "name": "advancementinfo-1.20-fabric0.83.0-1.4.jar",
+      "sha256": "cb394550be72cfa2ac1e96031253d8cf3a11a81d5463af2c8ace3bcc5cb5d8d9",
+      "size": 43895
+    },
+    {
+      "name": "animatica-0.6+1.20.jar",
+      "sha256": "cdfc6e7d48faf10e43f4072d58fbc05c842dfee7d41126db6deefdcf803cbda6",
+      "size": 69810
+    },
+    {
+      "name": "antighost-1.20-fabric0.83.0-1.1.5.jar",
+      "sha256": "8c3f882da54fd99760260bd382d8a92e40cb6beb7cfacd6110f2c8657d9707d3",
+      "size": 47162
+    },
+    {
+      "name": "bettermounthud-1.2.2.jar",
+      "sha256": "5de386555011840070dbbe7942422a8247b0b30a9d6d06d21c3c188ae53dde2f",
+      "size": 21587
+    },
+    {
+      "name": "borderless-mining-1.1.8+1.20.1.jar",
+      "sha256": "115fcbf03eb768bab073b337798289e998f13fc62a6a997971d7ccfd02e6a56a",
+      "size": 118295
+    },
+    {
+      "name": "capes-1.5.2+1.20-fabric.jar",
+      "sha256": "3e1068e2998bccb5520a229a7c28fd862367f37d52fa29108d3c71ce81549762",
+      "size": 170082
+    },
+    {
+      "name": "cloth-config-11.1.106-fabric.jar",
+      "sha256": "fa817af60df4738630b95f8e1df271934e6d3b84921012229e2ef01fe8cda34d",
+      "size": 1159179
+    },
+    {
+      "name": "continuity-3.0.0-beta.3+1.20.1.jar",
+      "sha256": "a2ef368b92fd77e1388acd92f1bb58c2b535eba62ce4b1391c2f1803ad3666a3",
+      "size": 1048859
+    },
+    {
+      "name": "dynamic-fps-3.0.0+minecraft-1.20.jar",
+      "sha256": "494b929da16284ee0cd15a3e884bff62d1088e7ddd85caf792766dd33e084153",
+      "size": 57376
+    },
+    {
+      "name": "e4mc-4.0.1+1.19.4-fabric.jar",
+      "sha256": "bf04e416037c15b5ba132c15a0da9462ce98d8a8c9478acce6a1f279d546cb1a",
+      "size": 275794
+    },
+    {
+      "name": "enhancedblockentities-0.9+1.20.jar",
+      "sha256": "1c4ce2c00d8cc6d2269de3cadaba551607c62692a8e5ad1d7c618462ed7ed05b",
+      "size": 490690
+    },
+    {
+      "name": "entity_model_features_fabric_1.20-0.2.13.jar",
+      "sha256": "0c4588bf9353715ea10665fc1f03fb911f6ca0af1efb4fe675b311e05693d689",
+      "size": 483141
+    },
+    {
+      "name": "entity_texture_features_fabric_1.20-4.5.1.jar",
+      "sha256": "d5cc5c94b6b24cdb84d6a209caab08117baa4c0be1dbe343ef44caf2721d8843",
+      "size": 457226
+    },
+    {
+      "name": "entityculling-fabric-1.6.2-mc1.20.jar",
+      "sha256": "53c120668de1d48e5cae23670ddd8e3282c7579d11d8e18d9d8d32000f31aa94",
+      "size": 57722
+    },
+    {
+      "name": "fabric-api-0.88.0+1.20.1.jar",
+      "sha256": "de631d203e159d3851def4521adb96ad5ca92a4ebd54ca110e1c1b77b07325b7",
+      "size": 2054352
+    },
+    {
+      "name": "fabric-language-kotlin-1.10.10+kotlin.1.9.10.jar",
+      "sha256": "981eaaa07026acc63bea962458c066003e9faef301efadd6c361820969dc8ba2",
+      "size": 6722438
+    },
+    {
+      "name": "fabricskyboxes-0.7.2+mc1.20.1.jar",
+      "sha256": "0e300fa198e5405bd361a5c88a6be3c328038f5f05bde8360519a75595769e77",
+      "size": 188769
+    },
+    {
+      "name": "fabrishot-1.10.0.jar",
+      "sha256": "cdbe27cacc4fdf5a5ca5c3cb9df1dc190c432dae161aaacddf68d3288c8bfddc",
+      "size": 44182
+    },
+    {
+      "name": "fadeless-1.0.1.jar",
+      "sha256": "4a854afa0ca3fbc6e942ee1e4a2e94335d517c276bf7989684c07612f0e7ac77",
+      "size": 7876
+    },
+    {
+      "name": "farsight-fabric-1.20.1-3.9.jar",
+      "sha256": "44a388fd827e7db0768e0be3b841cfb6b1dba6dbf94c93095f9bf4353b6bcde8",
+      "size": 26471
+    },
+    {
+      "name": "fastquit-3.0.0-beta.2+1.20+.jar",
+      "sha256": "7e8f4cd28fe5355bb9836458f0073c8145b4ab28786a855ffb19313d6275d046",
+      "size": 77033
+    },
+    {
+      "name": "ferritecore-6.0.0-fabric.jar",
+      "sha256": "efbf1d4df2a89621bb8d7090e04966795047db16513fef673a529a07dff66afe",
+      "size": 124927
+    },
+    {
+      "name": "fsb-interop-1.3.4+mc1.20-build.47.jar",
+      "sha256": "94a604a57f0fd80accf2734f059b16334bca2536991833282cd16b89fc70add5",
+      "size": 49507
+    },
+    {
+      "name": "indium-1.0.21+mc1.20.1.jar",
+      "sha256": "fb78b16343151cda90f36d1b25fbdcb8a099a4c8a2d76b642dad69caaaaf83d5",
+      "size": 104934
+    },
+    {
+      "name": "iris-mc1.20-1.6.4.jar",
+      "sha256": "e0ca4e507b8f36135fb053ce74dd3e48325a7f364051b0d1329f676cf8e4d6e5",
+      "size": 2368109
+    },
+    {
+      "name": "lambdynamiclights-2.3.1+1.20.1.jar",
+      "sha256": "7ce07bbfe1f6dd083bfc8e5bb9ba012bf3edbeed56d0a1750aed9a08d4084d99",
+      "size": 566197
+    },
+    {
+      "name": "language-reload-1.5.8+1.20.1.jar",
+      "sha256": "097c0b81fbb0d70c71eaf195487547dbfdb4a0580b6bddcd53e49d2a0f5d15d8",
+      "size": 64151
+    },
+    {
+      "name": "lithium-fabric-mc1.20.1-0.11.2.jar",
+      "sha256": "a0c595355d680e0c87bf8eaebafedff6900d4e771a8d6894ee6d2d4374de8df9",
+      "size": 645865
+    },
+    {
+      "name": "main-menu-credits-1.1.2.jar",
+      "sha256": "8686adf20a533d6520d5cb7ca3e608149ad3153acde041e86e43b87cdc96c1cf",
+      "size": 14340
+    },
+    {
+      "name": "memoryleakfix-fabric-1.17+-1.1.2.jar",
+      "sha256": "a9fadc6d369e6bbfb10eab4c00780c3295292c634b6551d2e1e2897ec38b63ab",
+      "size": 146263
+    },
+    {
+      "name": "mixintrace-1.1.1+1.17.jar",
+      "sha256": "26ca21a27706cfa4561868f31c4fd07c542e8cc759419f5884ddff1f3a126a99",
+      "size": 36039
+    },
+    {
+      "name": "modelfix-1.14-fabric.jar",
+      "sha256": "c9cd143ff43b89caabbefe1d6b0569477dc91c2a108822d4319c9cb0055ec332",
+      "size": 65430
+    },
+    {
+      "name": "modmenu-7.1.0.jar",
+      "sha256": "dab14e028f3a3e121f1603cc55af10645f5e29fdcf4f518238e3bf48275de897",
+      "size": 717936
+    },
+    {
+      "name": "morechathistory-1.19.1-1.1.1.jar",
+      "sha256": "dbb46f95282c7ee472f1e33a2cffef4303f798389ed3929d139aaabcc9f0d137",
+      "size": 11223
+    },
+    {
+      "name": "moreculling-1.20.1-0.19.0.jar",
+      "sha256": "8bd332613996b6da00318888f33c4704dba21083e1f7a2503969eb7c7d388cb0",
+      "size": 334034
+    },
+    {
+      "name": "optigui-2.1.5.jar",
+      "sha256": "dd1b31ccdd140f4f9b754cddd8409ed10ebbfec498d95565004ff93f9968c893",
+      "size": 778903
+    },
+    {
+      "name": "puzzle-1.5.2+1.20.jar",
+      "sha256": "3b1975479627b48efd7f97b6c14edd1ac5b3decb2b6205bb4cbcb27216392200",
+      "size": 133463
+    },
+    {
+      "name": "reeses_sodium_options-1.6.3+mc1.20.1-build.92.jar",
+      "sha256": "7f4213860f3c1194082a828dfcd6509fdc55bc730b027f63bd9fce86c6bd1ef1",
+      "size": 70043
+    },
+    {
+      "name": "sodium-extra-0.4.27+mc1.20.1-build.110.jar",
+      "sha256": "4d7773818e990a82c0d3d99d750ba17c151ad05ad12c16888559257eed8d70dd",
+      "size": 362588
+    },
+    {
+      "name": "sodium-fabric-mc1.20-0.4.10+build.27.jar",
+      "sha256": "30c86f7ee0a4f094fcaa1228342a72e50249f3c0fe6523667e72f57f9270085a",
+      "size": 717030
+    },
+    {
+      "name": "yet-another-config-lib-fabric-3.1.1+1.20.jar",
+      "sha256": "ea9a3c1783b84a1395b830ccfaafd08d659cf36f2cdded07d589e7ba962536b3",
+      "size": 807380
+    },
+    {
+      "name": "yosbr-0.1.2.jar",
+      "sha256": "db4c744fd71f5617639cb0fdff72378b08d2852004f4045c62090de1bf53afcb",
+      "size": 17373
+    }
+  ]
+}

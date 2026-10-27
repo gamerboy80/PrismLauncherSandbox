@@ -379,10 +379,10 @@ int AccessibleInstanceView::childCount() const
 
 int AccessibleInstanceView::indexOfChild(const QAccessibleInterface* iface) const
 {
-    if (!view()->model())
+    if (!view()->model() || !iface)
         return -1;
     QAccessibleInterface* parent = iface->parent();
-    if (parent->object() != view())
+    if (!parent || parent->object() != view())
         return -1;
 
     Q_ASSERT(iface->role() != QAccessible::TreeItem);  // should be handled by tree class
@@ -430,11 +430,18 @@ QAccessibleInterface* AccessibleInstanceView::child(int logicalIndex) const
     if (!view()->model())
         return 0;
 
-    auto id = childToId.constFind(logicalIndex);
-    if (id != childToId.constEnd())
-        return QAccessible::accessibleInterface(id.value());
+    auto id = childToId.find(logicalIndex);
+    if (id != childToId.end()) {
+        if (auto* cached = QAccessible::accessibleInterface(id.value())) {
+            if (cached->isValid()) return cached;
+            QAccessible::deleteAccessibleInterface(id.value());
+        }
+        // The native accessibility bridge can release a cell independently.
+        childToId.erase(id);
+    }
 
     int columns = view()->model()->columnCount();
+    if (logicalIndex < 0 || columns <= 0) return nullptr;
 
     int row = logicalIndex / columns;
     int column = logicalIndex % columns;
@@ -482,8 +489,8 @@ void AccessibleInstanceView::modelChange(QAccessibleTableModelChangeEvent* event
             while (iter != childToId.constEnd()) {
                 QAccessible::Id id = iter.value();
                 QAccessibleInterface* iface = QAccessible::accessibleInterface(id);
-                Q_ASSERT(iface);
-                if (indexOfChild(iface) >= 0) {
+                if (!iface) { ++iter; continue; }
+                if (iface->isValid() && indexOfChild(iface) >= 0) {
                     newCache.insert(indexOfChild(iface), id);
                 } else {
                     // ### This should really not happen,
@@ -504,7 +511,7 @@ void AccessibleInstanceView::modelChange(QAccessibleTableModelChangeEvent* event
             while (iter != childToId.constEnd()) {
                 QAccessible::Id id = iter.value();
                 QAccessibleInterface* iface = QAccessible::accessibleInterface(id);
-                Q_ASSERT(iface);
+                if (!iface) { ++iter; continue; }
                 if (iface->role() == QAccessible::Cell || iface->role() == QAccessible::ListItem) {
                     Q_ASSERT(iface->tableCellInterface());
                     AccessibleInstanceViewItem* cell = static_cast<AccessibleInstanceViewItem*>(iface->tableCellInterface());

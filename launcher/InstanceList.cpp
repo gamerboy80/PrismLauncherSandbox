@@ -35,6 +35,10 @@
  */
 
 #include "InstanceList.h"
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+#include "macsandbox/manager/SandboxLaunchController.h"
+#include <QTimer>
+#endif
 
 #include <QDebug>
 #include <QDirListing>
@@ -681,6 +685,13 @@ std::unique_ptr<MinecraftInstance> InstanceList::loadInstance(const InstanceId& 
     }
 
     auto instanceRoot = FS::PathCombine(rootDirOf(id), id);
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    const QString owned = QDir::cleanPath(SandboxLaunchController::managerRoot() + "/instances");
+    if (QFileInfo(QFileInfo(instanceRoot).absolutePath()).canonicalFilePath() != QFileInfo(owned).canonicalFilePath()) {
+        qWarning() << "Import this external instance into the manager instead of opening it in place:" << instanceRoot;
+        return nullptr;
+    }
+#endif
     auto instanceSettings = std::make_unique<INISettingsObject>(FS::PathCombine(instanceRoot, "instance.cfg"));
 
     instanceSettings->registerSetting("InstanceType", "");
@@ -692,6 +703,23 @@ std::unique_ptr<MinecraftInstance> InstanceList::loadInstance(const InstanceId& 
     }
 
     auto inst = std::make_unique<MinecraftInstance>(m_globalSettings, std::move(instanceSettings), instanceRoot);
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    const auto policy = SandboxLaunchController::policy(inst.get());
+    if (policy["active"].toBool()) {
+        inst->setRunning(true);
+        const bool game = policy["activeMode"].toString() != "command";
+        if (game) inst->resumeMinecraftRunning(policy["activeStartMilliseconds"].toInteger());
+        auto* timer = new QTimer(inst.get());
+        auto* instance = inst.get();
+        const QString identity = policy["id"].toString();
+        connect(timer, &QTimer::timeout, instance, [timer, instance, identity, game] {
+            if (!SandboxLaunchController::hasActiveRun(identity)) {
+                timer->stop(); if (game) instance->setMinecraftRunning(false); instance->setRunning(false);
+            }
+        });
+        timer->start(1000);
+    }
+#endif
     qDebug() << "Loaded instance" << inst->name() << "from" << inst->instanceRoot();
 
     auto shortcut = inst->shortcuts();
@@ -1090,7 +1118,11 @@ bool InstanceList::commitStagedInstance(const QString& path, const InstanceTask&
     if (shouldOverride) {
         instID = instanceTask.originalInstanceID();
     } else {
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+        instID = QUuid::createUuid().toString(QUuid::Id128);
+#else
         instID = FS::DirNameFromString(instanceTask.modifiedName(), m_instDirs);
+#endif
     }
 
     Q_ASSERT(!instID.isEmpty());

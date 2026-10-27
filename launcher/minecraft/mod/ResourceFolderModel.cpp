@@ -138,7 +138,7 @@ bool ResourceFolderModel::installResource(QString originalPath)
                 qDebug() << newPath << "has been deleted.";
             }
 
-            if (!QFile::copy(originalPath, newPath)) {
+            if (!FS::copyFile(originalPath, newPath)) {
                 qCritical() << "Copy from" << originalPath << "to" << newPath << "has failed.";
                 return false;
             }

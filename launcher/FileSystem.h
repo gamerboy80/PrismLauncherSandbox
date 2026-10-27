@@ -56,6 +56,7 @@ namespace FS {
  * write data to a file safely
  */
 Result<> write(const QString& filename, const QByteArray& data);
+bool copyFile(const QString& source, const QString& destination, bool overwrite = false);
 
 /**
  * append data to a file safely

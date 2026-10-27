@@ -98,7 +98,7 @@ void LegacyFMLLibrariesTask::fmllibsFinished()
                 emitFailed(tr("Failed creating FML library folder inside the instance."));
                 return;
             }
-            if (!QFile::copy(entry->getFullPath(), FS::PathCombine(inst->libDir(), lib.filename))) {
+            if (!FS::copyFile(entry->getFullPath(), FS::PathCombine(inst->libDir(), lib.filename))) {
                 emitFailed(tr("Failed copying Forge/FML library: %1.").arg(lib.filename));
                 return;
             }

@@ -1,3 +1,6 @@
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+#include "macsandbox/manager/SandboxFileAccess.h"
+#endif
 // SPDX-License-Identifier: GPL-3.0-only
 /*
  *  Prism Launcher - Minecraft Launcher
@@ -34,6 +37,7 @@
  */
 
 #include <QCryptographicHash>
+#include <QRegularExpression>
 #include <QDebug>
 #include <QDir>
 #include <QDirListing>
@@ -94,6 +98,11 @@ bool loadAssetsIndexJson(const QString& assetsId, const QString& path, AssetsInd
     }
     */
 
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    auto content = FS::read(path);
+    if (!content) return false;
+    QByteArray jsonData = *content;
+#else
     QFile file(path);
 
     // Try to open the file and fail if we can't.
@@ -102,12 +111,13 @@ bool loadAssetsIndexJson(const QString& assetsId, const QString& path, AssetsInd
         qCritical() << "Failed to read assets index file" << path << "error:" << file.errorString();
         return false;
     }
-    index.id = assetsId;
 
     // Read the file and close it.
     QByteArray jsonData = file.readAll();
     file.close();
+#endif
 
+    index.id = assetsId;
     auto jsonResult = Json::requireObject(jsonData, "assets index file");
 
     // Fail if the JSON is invalid or the root is not an object.
@@ -137,7 +147,7 @@ bool loadAssetsIndexJson(const QString& assetsId, const QString& path, AssetsInd
         const auto& variant = iter.value();
         auto nestedObjects = variant.toMap();
 
-        AssetObject object;
+        AssetObject object{};
 
         for (auto nestedIter = nestedObjects.begin(); nestedIter != nestedObjects.end(); ++nestedIter) {
             // qDebug() << nested_iter.key() << nested_iter.value().toString();
@@ -151,6 +161,11 @@ bool loadAssetsIndexJson(const QString& assetsId, const QString& path, AssetsInd
             }
         }
 
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+        static const QRegularExpression hashPattern("^[0-9a-f]{40}$");
+        if (!SandboxFileAccess::safeRelativePath(iter.key()) || !hashPattern.match(object.hash).hasMatch() || object.size < 0)
+            return false;
+#endif
         index.objects.insert(iter.key(), object);
     }
 
@@ -249,7 +264,7 @@ bool reconstructAssets(const QString& assetsId, const QString& resourcesFolder)
                 qDebug() << targetDir.path();
                 FS::ensureFolderPathExists(targetDir.path());
 
-                bool couldCopy = original.copy(assetPath);
+                bool couldCopy = FS::copyFile(originalPath, assetPath);
                 qDebug() << " Copying" << originalPath << "to" << assetPath << QString::number(static_cast<int>(couldCopy));
             }
         }

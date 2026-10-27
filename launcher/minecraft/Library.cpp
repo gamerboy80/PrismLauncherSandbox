@@ -76,6 +76,9 @@ void Library::getApplicableFiles(const RuntimeContext& runtimeContext,
     };
 
     QString raw_storage = storageSuffix(runtimeContext);
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    if (raw_storage.isEmpty()) return;
+#endif
     if (isNative()) {
         if (raw_storage.contains("${arch}")) {
             auto nat32Storage = raw_storage;
@@ -159,6 +162,12 @@ QList<Net::Request::Ptr> Library::getDownloads(const RuntimeContext& runtimeCont
     };
 
     QString raw_storage = storageSuffix(runtimeContext);
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    if (raw_storage.isEmpty()) {
+        failedLocalFiles << "Invalid sandbox dependency path: " + m_name.serialize();
+        return {};
+    }
+#endif
     if (m_mojangDownloads) {
         if (isNative()) {
             auto nativeClassifier = getCompatibleNative(runtimeContext);

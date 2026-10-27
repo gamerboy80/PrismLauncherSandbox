@@ -62,6 +62,11 @@ static Result<> unzipNatives(QString source, QString targetFolder, bool applyJni
 
 void ExtractNatives::executeTask()
 {
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    // Native archives are inspected, reviewed, and signed into the independent game bundle later.
+    emitSucceeded();
+    return;
+#endif
     auto instance = m_parent->instance();
     auto toExtract = instance->getNativeJars();
     if (toExtract.isEmpty()) {
@@ -86,6 +91,9 @@ void ExtractNatives::executeTask()
 
 void ExtractNatives::finalize()
 {
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    return; // Never recursively clean a directory the game can replace with a link.
+#endif
     auto instance = m_parent->instance();
     QString target_dir = FS::PathCombine(instance->instanceRoot(), "natives/");
     QDir dir(target_dir);

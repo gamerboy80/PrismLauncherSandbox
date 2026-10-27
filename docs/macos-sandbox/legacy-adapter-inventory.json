@@ -1,0 +1,543 @@
+{
+  "version": 1,
+  "previousFingerprint": "fbd935eff8bbf6b44200ab019164c11298b2508e8429ee56b6cdad21518bf84d",
+  "approvalFingerprint": "75f277edc80af34cafb10f5184e674fabb0c2a45212f6967d895429daad25195",
+  "review": {
+    "adapterVersion": 1,
+    "adapters": [
+      {
+        "artifactHash": "c4dadeeecaa90c8847902082aee5eb107fcf59c5d0e63a17fcaf273c0e2d2bd1",
+        "id": "jna-nounpack-v1"
+      },
+      {
+        "artifactHash": "833e721817f70d1445eec13d8ce5a86e12af70efac5014356302e2bbc68b3fe2",
+        "id": "lwjgl-library-path-v1"
+      },
+      {
+        "artifactHash": "8831b2bd5a53dc343fd6fbed3c18f28ab33d3f28dbe62ebd4a3af81f25c0a5ab",
+        "id": "lwjgl-library-path-v1"
+      },
+      {
+        "id": "weblite-1.0.0",
+        "artifactHash": "fec83601d2da127234728a8fffb429d0c4a59587452834da203163e6a3f941db"
+      }
+    ],
+    "architecture": "x86_64",
+    "artifacts": [
+      {
+        "sha256": "b490a92062fc482c04f50395d7bbbd3dff22c32eaab45f04478f14d1501af6fa",
+        "source": "/private/tmp/prism-manager-acceptance-lo1qz4na/manager/libraries/ca/weblite/java-objc-bridge/1.0.0/java-objc-bridge-1.0.0-natives-osx.jar"
+      },
+      {
+        "sha256": "fec83601d2da127234728a8fffb429d0c4a59587452834da203163e6a3f941db",
+        "source": "/private/tmp/prism-manager-acceptance-lo1qz4na/manager/libraries/ca/weblite/java-objc-bridge/1.0.0/java-objc-bridge-1.0.0.jar"
+      },
+      {
+        "sha256": "c4dadeeecaa90c8847902082aee5eb107fcf59c5d0e63a17fcaf273c0e2d2bd1",
+        "source": "/private/tmp/prism-manager-acceptance-lo1qz4na/manager/libraries/net/java/dev/jna/jna/4.4.0/jna-4.4.0.jar"
+      },
+      {
+        "sha256": "171024b00f9a743b92388b48733dc30fd3f6d3a7da4f66f9821531fbcf1aa074",
+        "source": "/private/tmp/prism-manager-acceptance-lo1qz4na/manager/libraries/net/java/jinput/jinput-platform/2.0.5/jinput-platform-2.0.5-natives-osx.jar"
+      },
+      {
+        "sha256": "8831b2bd5a53dc343fd6fbed3c18f28ab33d3f28dbe62ebd4a3af81f25c0a5ab",
+        "source": "/private/tmp/prism-manager-acceptance-lo1qz4na/manager/libraries/org/lwjgl/lwjgl/lwjgl-platform/2.9.4-nightly-20150209/lwjgl-platform-2.9.4-nightly-20150209-natives-osx.jar"
+      }
+    ],
+    "nativeFiles": [
+      {
+        "architectures": [
+          "x86_64"
+        ],
+        "entry": "libjcocoa.dylib",
+        "name": "libjcocoa.dylib",
+        "sha256": "1cc8865d7f4adb708d25be5d311f37136ad7b6bb07d6c06de1af84eeadd7537e",
+        "size": 22060,
+        "source": "/private/tmp/prism-manager-acceptance-lo1qz4na/manager/libraries/ca/weblite/java-objc-bridge/1.0.0/java-objc-bridge-1.0.0-natives-osx.jar"
+      },
+      {
+        "architectures": [
+          "x86_64"
+        ],
+        "entry": "libjcocoa.dylib",
+        "name": "libjcocoa.dylib",
+        "sha256": "1cc8865d7f4adb708d25be5d311f37136ad7b6bb07d6c06de1af84eeadd7537e",
+        "size": 22060,
+        "source": "/private/tmp/prism-manager-acceptance-lo1qz4na/manager/libraries/ca/weblite/java-objc-bridge/1.0.0/java-objc-bridge-1.0.0.jar"
+      },
+      {
+        "architectures": [
+          "i386",
+          "x86_64"
+        ],
+        "entry": "com/sun/jna/darwin/libjnidispatch.jnilib",
+        "name": "libjnidispatch.jnilib",
+        "sha256": "34cb1d387fb3103132fe63792fae7dd02500757ae6dd774b915de69a3613c75b",
+        "size": 181004,
+        "source": "/private/tmp/prism-manager-acceptance-lo1qz4na/manager/libraries/net/java/dev/jna/jna/4.4.0/jna-4.4.0.jar"
+      },
+      {
+        "architectures": [
+          "i386",
+          "unknown",
+          "x86_64"
+        ],
+        "entry": "libjinput-osx.jnilib",
+        "name": "libjinput-osx.jnilib",
+        "sha256": "d155c29cfa7d7b49cab0821d5ba00a8fdc8b386c8bf5669f0313a62e44ba70d6",
+        "size": 64608,
+        "source": "/private/tmp/prism-manager-acceptance-lo1qz4na/manager/libraries/net/java/jinput/jinput-platform/2.0.5/jinput-platform-2.0.5-natives-osx.jar"
+      },
+      {
+        "architectures": [
+          "x86_64"
+        ],
+        "entry": "liblwjgl.dylib",
+        "name": "liblwjgl.dylib",
+        "sha256": "4e9512afc0aa0831cc72591852c47c804c57ed13bd4ab9ba3ac798650616db0e",
+        "size": 531120,
+        "source": "/private/tmp/prism-manager-acceptance-lo1qz4na/manager/libraries/org/lwjgl/lwjgl/lwjgl-platform/2.9.4-nightly-20150209/lwjgl-platform-2.9.4-nightly-20150209-natives-osx.jar"
+      },
+      {
+        "architectures": [
+          "i386",
+          "x86_64"
+        ],
+        "entry": "openal.dylib",
+        "name": "openal.dylib",
+        "sha256": "d845fab22fd58425deafbcb1a552633b4a62bd5dfa27b9263c050d91a3fad8c0",
+        "size": 731648,
+        "source": "/private/tmp/prism-manager-acceptance-lo1qz4na/manager/libraries/org/lwjgl/lwjgl/lwjgl-platform/2.9.4-nightly-20150209/lwjgl-platform-2.9.4-nightly-20150209-natives-osx.jar"
+      }
+    ],
+    "runtimeFiles": [
+      {
+        "architectures": [
+          "x86_64"
+        ],
+        "path": "bin/java",
+        "sha256": "63989d11d1aabff18b263f7bd539aa1c743571ec8387403b9ed5dc650dd37992",
+        "size": 146144
+      },
+      {
+        "architectures": [
+          "x86_64"
+        ],
+        "path": "bin/jfr",
+        "sha256": "4eab8fde2d64d26bbfe14ed86ba973753fe5cfe45e5d0fe6cbb2785364578f7b",
+        "size": 146160
+      },
+      {
+        "architectures": [
+          "x86_64"
+        ],
+        "path": "bin/jjs",
+        "sha256": "4c7e02ad13f6bd34f505486a86826fc9a2866e45d7a6e8b827ae6dd66cde9b01",
+        "size": 146160
+      },
+      {
+        "architectures": [
+          "x86_64"
+        ],
+        "path": "bin/keytool",
+        "sha256": "99a2f300d6fd5a1905299b1dee11958706893b8f5d02196f88b10f1151d47f7c",
+        "size": 146176
+      },
+      {
+        "architectures": [
+          "x86_64"
+        ],
+        "path": "bin/orbd",
+        "sha256": "675333ef24b1765bb62a61959e7138aea941d76d5f00af1c841f52e1514c3a44",
+        "size": 146160
+      },
+      {
+        "architectures": [
+          "x86_64"
+        ],
+        "path": "bin/pack200",
+        "sha256": "e15358e7bd6c9198bf0b7aa8d2c948a9b4c7e8670715067ff02e0a94725aee46",
+        "size": 146176
+      },
+      {
+        "architectures": [
+          "x86_64"
+        ],
+        "path": "bin/policytool",
+        "sha256": "bcd358866ef501769ed4d9fed5d4537c1867caff1bca692195634accaa7885ef",
+        "size": 146176
+      },
+      {
+        "architectures": [
+          "x86_64"
+        ],
+        "path": "bin/rmid",
+        "sha256": "e2b4d39bd6cee2b0fb2e378c840c67c51510d42095d2f3c40b5eb3c20dd1d374",
+        "size": 146160
+      },
+      {
+        "architectures": [
+          "x86_64"
+        ],
+        "path": "bin/rmiregistry",
+        "sha256": "f699834db02835aa3d2ef70a8d9777d7efaace3af4f476373ad3074bcc7714ab",
+        "size": 146176
+      },
+      {
+        "architectures": [
+          "x86_64"
+        ],
+        "path": "bin/servertool",
+        "sha256": "1a901524bf2dfba95a929f6389c74d93f11187f4c767e23877f0d20532fb9c7f",
+        "size": 146176
+      },
+      {
+        "architectures": [
+          "x86_64"
+        ],
+        "path": "bin/tnameserv",
+        "sha256": "f076630b9c8be70d98562e38cb60e820b7bd024a6012754f6877e61214e0c440",
+        "size": 146176
+      },
+      {
+        "architectures": [
+          "x86_64"
+        ],
+        "path": "bin/unpack200",
+        "sha256": "ac7b3ffcbce887faeaa990d0f4b1a59e508e7fee7c6de45972aacbc63bc3c1cb",
+        "size": 168960
+      },
+      {
+        "architectures": [
+          "x86_64"
+        ],
+        "path": "lib/jli/libjli.dylib",
+        "sha256": "f036f186497be661b85028da04a16d248b9b30ca7da6f77ba1b48bd5257c9da0",
+        "size": 125984
+      },
+      {
+        "architectures": [
+          "x86_64"
+        ],
+        "path": "lib/jspawnhelper",
+        "sha256": "0789ab156b14b93b200e67430dc9f9c97aed1b568d624a9be56f087ae11c3952",
+        "size": 72992
+      },
+      {
+        "architectures": [
+          "x86_64"
+        ],
+        "path": "lib/libAppleScriptEngine.dylib",
+        "sha256": "e156465c9050a4bf64a26b769e50b38b752e8486043cece65624e499e17c0c3a",
+        "size": 115904
+      },
+      {
+        "architectures": [
+          "x86_64"
+        ],
+        "path": "lib/libattach.dylib",
+        "sha256": "b0e8defbb1347742dc1db6677d22f9fd3384ba5a1225760bd8b1c089783cee59",
+        "size": 72608
+      },
+      {
+        "architectures": [
+          "x86_64"
+        ],
+        "path": "lib/libawt.dylib",
+        "sha256": "3e59815f5b74aafe72dba6d2030682a7685cfb451f0afe0de238523bebb57548",
+        "size": 638544
+      },
+      {
+        "architectures": [
+          "x86_64"
+        ],
+        "path": "lib/libawt_lwawt.dylib",
+        "sha256": "542207e4b0b6abf2153f371295971ab6e6c84cda9a68b29b52dd467a0bc0bb9c",
+        "size": 878976
+      },
+      {
+        "architectures": [
+          "x86_64"
+        ],
+        "path": "lib/libdt_socket.dylib",
+        "sha256": "75ec545c5cbe998e3a63990579c7d356a58518ae062f8ff28b5ca084e8c5f106",
+        "size": 77888
+      },
+      {
+        "architectures": [
+          "x86_64"
+        ],
+        "path": "lib/libfontmanager.dylib",
+        "sha256": "3774976c18ad3a1d6ed6197da1ae59458b5e1c0d143e70658cd35f907f84b1c0",
+        "size": 558064
+      },
+      {
+        "architectures": [
+          "x86_64"
+        ],
+        "path": "lib/libfreetype.dylib",
+        "sha256": "965622b2f8be00e9d5f03464eeb8eab13df8329f53bd5cceb31aa70331f7ff5f",
+        "size": 726784
+      },
+      {
+        "architectures": [
+          "x86_64"
+        ],
+        "path": "lib/libhprof.dylib",
+        "sha256": "a3f638bd0e1149c7006f060ae7b678d2f41a2921fea041265280ace4d02a498f",
+        "size": 241280
+      },
+      {
+        "architectures": [
+          "x86_64"
+        ],
+        "path": "lib/libinstrument.dylib",
+        "sha256": "73f48e18aa83421878e36b64f6927f26806a2a4ccf37ea3fcc41756cf097c824",
+        "size": 182240
+      },
+      {
+        "architectures": [
+          "x86_64"
+        ],
+        "path": "lib/libj2gss.dylib",
+        "sha256": "9264d88cf5e3496db48753b6a0710a77040ffea323691eece8925512043592ba",
+        "size": 102640
+      },
+      {
+        "architectures": [
+          "x86_64"
+        ],
+        "path": "lib/libj2pcsc.dylib",
+        "sha256": "85c7f32ca3c28c9800ab5fdd71c70a7edd2c5cfcbcff98f49ccd209ac3ea0fba",
+        "size": 74560
+      },
+      {
+        "architectures": [
+          "x86_64"
+        ],
+        "path": "lib/libj2pkcs11.dylib",
+        "sha256": "d42ef6dc76ced71be5be9c0ad805bf79c4a1e92f2a69ce0d343f0b8360f5524f",
+        "size": 153056
+      },
+      {
+        "architectures": [
+          "x86_64"
+        ],
+        "path": "lib/libjaas_unix.dylib",
+        "sha256": "dae0bf05178bf1955ea840bf27a1aa7a6745d6765be8cba585896cc7f8f76025",
+        "size": 69744
+      },
+      {
+        "architectures": [
+          "x86_64"
+        ],
+        "path": "lib/libjava.dylib",
+        "sha256": "add6891c6f055c66b1ab8338892dc37a6cbd496dcb0f6c8c9b996257590fd8e5",
+        "size": 305888
+      },
+      {
+        "architectures": [
+          "x86_64"
+        ],
+        "path": "lib/libjava_crw_demo.dylib",
+        "sha256": "7d36f7493d4a3bb3d3c1a97c791c84a194f6f23566bb4b675efdeb066fb98eab",
+        "size": 88928
+      },
+      {
+        "architectures": [
+          "x86_64"
+        ],
+        "path": "lib/libjawt.dylib",
+        "sha256": "28046760e7ab4f81801abd52f29b6caab2c707b83f6d0554d4b597760b1bd11f",
+        "size": 52848
+      },
+      {
+        "architectures": [
+          "x86_64"
+        ],
+        "path": "lib/libjdwp.dylib",
+        "sha256": "04429c9f6459e9e718cbf9c42ef1b0c31256080df907682b968aa85aeb1a29fe",
+        "size": 324816
+      },
+      {
+        "architectures": [
+          "x86_64"
+        ],
+        "path": "lib/libjpeg.dylib",
+        "sha256": "a71730f4048ae02c445e6c5aefe04e7586813601f7d31641658402ea83f16cd7",
+        "size": 239152
+      },
+      {
+        "architectures": [
+          "x86_64"
+        ],
+        "path": "lib/libjsdt.dylib",
+        "sha256": "15bb3b4a1f7d93c83a4c206b7c80fda6fb010aa77b8aeff98e81980df9d9d180",
+        "size": 71008
+      },
+      {
+        "architectures": [
+          "x86_64"
+        ],
+        "path": "lib/libjsig.dylib",
+        "sha256": "9a485a0dce2742255add3493930013fb1916aa6391b4b159690fcc84a5676f16",
+        "size": 71664
+      },
+      {
+        "architectures": [
+          "x86_64"
+        ],
+        "path": "lib/libjsound.dylib",
+        "sha256": "06dcf99f5a6ceb9ac0de1f1ef0d5308333da4e26c65f6ac3c87c33823bda8c4d",
+        "size": 146016
+      },
+      {
+        "architectures": [
+          "x86_64"
+        ],
+        "path": "lib/liblcms.dylib",
+        "sha256": "42e8e5e0bd0b7a774b0f8ead6ceb3af4c0a4eb7afae65220f32540019512c60b",
+        "size": 469392
+      },
+      {
+        "architectures": [
+          "x86_64"
+        ],
+        "path": "lib/libmanagement.dylib",
+        "sha256": "cd9dad3abfaec779270b14e59f27e0ce5cc884c617e5235d1e824f2a840ac5ec",
+        "size": 98672
+      },
+      {
+        "architectures": [
+          "x86_64"
+        ],
+        "path": "lib/libmlib_image.dylib",
+        "sha256": "1aa946b41bc4e0cf8f3cf4dfb20882f6db61f9f9a9f64c4a9630649cb3d44e7c",
+        "size": 821792
+      },
+      {
+        "architectures": [
+          "x86_64"
+        ],
+        "path": "lib/libnet.dylib",
+        "sha256": "d6e12ea549f21bd4d55ed3fa8d9ae10255d91b1415f39d08906201dbb95998b0",
+        "size": 166608
+      },
+      {
+        "architectures": [
+          "x86_64"
+        ],
+        "path": "lib/libnio.dylib",
+        "sha256": "08aef9fa564f178edd4c89f405011a72297ef8baf8e77a84b9bffb4dfe4c0786",
+        "size": 130368
+      },
+      {
+        "architectures": [
+          "x86_64"
+        ],
+        "path": "lib/libnpt.dylib",
+        "sha256": "60894307ee1ff48176ca3e2f58c3c0a91c3163b0a95fa8ff9b34f1fa8aa97f29",
+        "size": 72048
+      },
+      {
+        "architectures": [
+          "x86_64"
+        ],
+        "path": "lib/libosx.dylib",
+        "sha256": "db3978abbb22d13ccf58c651606a0784ecbc257f8e63ab79abd10b98bd1f919e",
+        "size": 117392
+      },
+      {
+        "architectures": [
+          "x86_64"
+        ],
+        "path": "lib/libosxapp.dylib",
+        "sha256": "b53f5eb0af1fa92879d21d243604be93a9d29a62abbed7a8b95e3b474109cb4e",
+        "size": 424768
+      },
+      {
+        "architectures": [
+          "x86_64"
+        ],
+        "path": "lib/libosxkrb5.dylib",
+        "sha256": "c05a52fa6fbda4d0de6e0f3657ce4a745b930da4000723630942c6ee50083f54",
+        "size": 72672
+      },
+      {
+        "architectures": [
+          "x86_64"
+        ],
+        "path": "lib/libosxui.dylib",
+        "sha256": "f8c4580901115a05e16044deeff3445ff6c03687251e9b8448bf1eb34ce1c80b",
+        "size": 108400
+      },
+      {
+        "architectures": [
+          "x86_64"
+        ],
+        "path": "lib/libsaproc.dylib",
+        "sha256": "9dbe3c34884978b14cdbf48b14d0ac524fe8744ceca50231e988036cffa70913",
+        "size": 120560
+      },
+      {
+        "architectures": [
+          "x86_64"
+        ],
+        "path": "lib/libsplashscreen.dylib",
+        "sha256": "aa97cc1013cf2bbbbc4c1a72bff9c1219e4d77af9b387c18fc3b49a8166fa4be",
+        "size": 422016
+      },
+      {
+        "architectures": [
+          "x86_64"
+        ],
+        "path": "lib/libsunec.dylib",
+        "sha256": "36288f094289c767e4c34a4e68a08000c6716b3c9d5012c1e351b398ac960bab",
+        "size": 223376
+      },
+      {
+        "architectures": [
+          "x86_64"
+        ],
+        "path": "lib/libunpack.dylib",
+        "sha256": "2edb4177c4b3febd7ffe53fff4f375d39c40fb5c1493da19f79e036afbc909d7",
+        "size": 152176
+      },
+      {
+        "architectures": [
+          "x86_64"
+        ],
+        "path": "lib/libverify.dylib",
+        "sha256": "6e2b8943a2af671259329ed3cb44706fb15a0cfda9ad67d59acb6f9a0d633909",
+        "size": 93728
+      },
+      {
+        "architectures": [
+          "x86_64"
+        ],
+        "path": "lib/libzip.dylib",
+        "sha256": "e1c10f76cdf4ea810521dfab1790984f0704e04deef0eabcc9120eb439d9ea80",
+        "size": 101120
+      },
+      {
+        "architectures": [
+          "x86_64"
+        ],
+        "path": "lib/server/libjsig.dylib",
+        "sha256": "ee931da298ba6de36686212737f39aaaa1a162155f87c6145c2e596d2d1adced",
+        "size": 71664
+      },
+      {
+        "architectures": [
+          "x86_64"
+        ],
+        "path": "lib/server/libjvm.dylib",
+        "sha256": "9210f185b3c4c22c88b54fdab1f2b8a49c9300e29a83dd7e541a8e404fd5fd26",
+        "size": 14529344
+      }
+    ],
+    "runtimeOrigin": "/private/tmp/prism-manager-acceptance-lo1qz4na/cache/java/zulu8-intel/zulu8.96.0.205-ca-jre8.0.504-macosx_x64/Contents/Home",
+    "signingProfile": "adhoc-inherited-jvm-v1"
+  }
+}

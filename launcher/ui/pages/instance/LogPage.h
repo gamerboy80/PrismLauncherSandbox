@@ -37,6 +37,11 @@
 
 #include <QIdentityProxyModel>
 #include <QWidget>
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+#include <QFile>
+#include <QTimer>
+#include <QStringConverter>
+#endif
 
 #include "BaseInstance.h"
 #include "launch/LaunchTask.h"
@@ -94,11 +99,18 @@ class LogPage : public QWidget, public BasePage {
     void modelStateToUI();
     void UIToModelState();
     void setInstanceLaunchTaskChanged(LaunchTask* proc, bool initial);
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    void reconnectSandboxLog();
+    std::unique_ptr<QFile> m_detachedLog;
+    QTimer m_detachedTimer;
+    QString m_detachedRemainder;
+    QStringDecoder m_detachedDecoder{QStringDecoder::Utf8};
+#endif
 
    private:
     Ui::LogPage* ui;
     BaseInstance* m_instance;
-    LaunchTask* m_process;
+    LaunchTask* m_process = nullptr;
 
     LogFormatProxyModel* m_proxy;
     shared_qobject_ptr<LogModel> m_model;

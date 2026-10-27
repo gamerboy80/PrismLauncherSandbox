@@ -47,12 +47,26 @@
 
 #include <QSettings>
 #include <utility>
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+#include "macsandbox/manager/SandboxFileAccess.h"
+#endif
 #include "Json.h"
 
 INIFile::INIFile() = default;
 
 bool INIFile::saveFile(const QString& fileName)
 {
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    if (SandboxFileAccess::instancePath(fileName)) {
+        QTemporaryFile temporary;
+        if (!temporary.open()) return false;
+        const QString path = temporary.fileName();
+        temporary.close();
+        if (!saveFile(path)) return false;
+        QFile file(path);
+        return file.open(QIODevice::ReadOnly) && SandboxFileAccess::write(fileName, file.readAll());
+    }
+#endif
     if (!contains("ConfigVersion")) {
         insert("ConfigVersion", "1.3");
     }
@@ -175,6 +189,12 @@ QVariant migrateQByteArrayToBase64(const QString& key, QVariant value)
 
 bool INIFile::loadFile(const QString& fileName)
 {
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    if (SandboxFileAccess::instancePath(fileName)) {
+        auto bytes = SandboxFileAccess::read(fileName);
+        return bytes && loadFile(*bytes);
+    }
+#endif
     QSettings settingsObj{ fileName, QSettings::Format::IniFormat };
     settingsObj.setFallbacksEnabled(false);
 

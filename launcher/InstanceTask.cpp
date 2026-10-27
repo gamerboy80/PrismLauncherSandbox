@@ -1,3 +1,6 @@
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+#include "macsandbox/manager/SandboxFileAccess.h"
+#endif
 #include "InstanceTask.h"
 #include <QApplication>
 #include <QDir>
@@ -114,6 +117,12 @@ void InstanceTask::scheduleToDelete(QWidget* parent, const QDir& dir, const QStr
     if (path.isEmpty()) {
         return;
     }
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    if (!SandboxFileAccess::safeRelativePath(path)) {
+        qWarning() << "Refusing unsafe modpack removal path" << path;
+        return;
+    }
+#endif
     if (path.startsWith("saves/")) {
         if (m_shouldDeleteSaves == ShouldDeleteSaves::NotAsked) {
             m_shouldDeleteSaves = askIfShouldDeleteSaves(parent);

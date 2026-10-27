@@ -39,6 +39,9 @@
 #include "Sink.h"
 
 #include <utility>
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+#include <QCryptographicHash>
+#endif
 
 namespace Net {
 class FileSink : public Sink {
@@ -62,5 +65,9 @@ class FileSink : public Sink {
     QString m_filename;
     bool m_wroteAnyData = false;
     std::unique_ptr<PSaveFile> m_outputFile;
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    QCryptographicHash m_originHash{QCryptographicHash::Sha256};
+    qint64 m_originSize = 0;
+#endif
 };
 }  // namespace Net

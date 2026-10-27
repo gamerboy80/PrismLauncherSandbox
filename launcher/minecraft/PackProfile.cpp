@@ -46,6 +46,7 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QSaveFile>
+#include <QRegularExpression>
 #include <QTimer>
 #include <QUuid>
 #include <expected>
@@ -140,6 +141,10 @@ Result<ComponentPtr> componentFromJsonV1(PackProfile* parent, const QJsonObject&
 {
     // critical
     TRY_INTO(const auto& uid, Json::requireString(obj.value("uid")))
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    if (!QRegularExpression("^[A-Za-z0-9_-]+(?:\\.[A-Za-z0-9_-]+)*$").match(uid).hasMatch())
+        return std::unexpected("Invalid sandbox component identifier");
+#endif
     auto component = makeShared<Component>(parent, uid);
     component->m_version = obj.value("version").toString();
     component->m_dependencyOnly = obj.value("dependencyOnly").toBool();
@@ -167,6 +172,11 @@ bool savePackProfile(const QString& filename, const ComponentContainer& containe
         orderArray.append(componentToJsonV1(component));
     }
     obj.insert("components", orderArray);
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    auto written = FS::write(filename, QJsonDocument(obj).toJson(QJsonDocument::Indented));
+    if (!written) qCCritical(instanceProfileC) << written.error();
+    return written.has_value();
+#endif
     QSaveFile outFile(filename);
     if (!outFile.open(QFile::WriteOnly)) {
         qCCritical(instanceProfileC) << "Couldn't open" << outFile.fileName() << "for writing:" << outFile.errorString();
@@ -701,9 +711,15 @@ bool PackProfile::installComponents(QStringList selectedFiles)
         const QFileInfo sourceInfo(source);
 
         auto versionFile = ProfileUtils::parseJsonFile(sourceInfo, false);
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+        if (!QRegularExpression("^[A-Za-z0-9_-]+(?:\\.[A-Za-z0-9_-]+)*$").match(versionFile->uid).hasMatch()) {
+            qCWarning(instanceProfileC) << "Refusing unsafe component identifier" << versionFile->uid;
+            result = false; continue;
+        }
+#endif
         const QString target = FS::PathCombine(patchDir, versionFile->uid + ".json");
 
-        if (!QFile::copy(source, target)) {
+        if (!FS::copyFile(source, target)) {
             qCWarning(instanceProfileC) << d->m_instance->name() << "|" << "Component" << source << "could not be copied to target"
                                         << target;
             result = false;
@@ -736,6 +752,9 @@ bool PackProfile::installEmpty(const QString& uid, const QString& name)
     f->uid = uid;
     f->version = "1";
     QString patchFileName = FS::PathCombine(patchDir, uid + ".json");
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    if (!FS::write(patchFileName, OneSixVersionFormat::versionFileToJson(f).toJson())) return false;
+#else
     QFile file(patchFileName);
     if (!file.open(QFile::WriteOnly)) {
         qCCritical(instanceProfileC) << d->m_instance->name() << "|" << "Error opening" << file.fileName()
@@ -744,6 +763,7 @@ bool PackProfile::installEmpty(const QString& uid, const QString& name)
     }
     file.write(OneSixVersionFormat::versionFileToJson(f).toJson());
     file.close();
+#endif
 
     appendComponent(makeShared<Component>(this, f->uid, f));
     scheduleSave();
@@ -758,7 +778,7 @@ bool PackProfile::removeComponent_internal(ComponentPtr patch)
     auto fileName = patch->getFilename();
     if (fileName.size()) {
         QFile patchFile(fileName);
-        if (patchFile.exists() && !patchFile.remove()) {
+        if (patchFile.exists() && !FS::deletePath(fileName)) {
             qCCritical(instanceProfileC) << d->m_instance->name() << "|" << "File" << fileName
                                          << "could not be removed because:" << patchFile.errorString();
             return false;
@@ -775,7 +795,7 @@ bool PackProfile::removeComponent_internal(ComponentPtr patch)
         QFileInfo finfo(jar[0]);
         if (finfo.exists()) {
             QFile jarModFile(jar[0]);
-            if (!jarModFile.remove()) {
+            if (!FS::deletePath(jar[0])) {
                 qCCritical(instanceProfileC) << d->m_instance->name() << "|" << "File" << jar[0]
                                              << "could not be removed because:" << jarModFile.errorString();
                 return false;
@@ -817,7 +837,7 @@ bool PackProfile::installJarMods_internal(QStringList filepaths)
         QFileInfo targetInfo(finalPath);
         Q_ASSERT(!targetInfo.exists());
 
-        if (!QFile::copy(sourceInfo.absoluteFilePath(), QFileInfo(finalPath).absoluteFilePath())) {
+        if (!FS::copyFile(sourceInfo.absoluteFilePath(), QFileInfo(finalPath).absoluteFilePath())) {
             return false;
         }
 
@@ -831,7 +851,9 @@ bool PackProfile::installJarMods_internal(QStringList filepaths)
         f->name = target_name;
         f->uid = target_id;
         QString patchFileName = FS::PathCombine(patchDir, target_id + ".json");
-
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+        if (!FS::write(patchFileName, OneSixVersionFormat::versionFileToJson(f).toJson())) return false;
+#else
         QFile file(patchFileName);
         if (!file.open(QFile::WriteOnly)) {
             qCCritical(instanceProfileC) << d->m_instance->name() << "|" << "Error opening" << file.fileName()
@@ -840,6 +862,7 @@ bool PackProfile::installJarMods_internal(QStringList filepaths)
         }
         file.write(OneSixVersionFormat::versionFileToJson(f).toJson());
         file.close();
+#endif
 
         appendComponent(makeShared<Component>(this, f->uid, f));
     }
@@ -873,7 +896,7 @@ bool PackProfile::installCustomJar_internal(QString filepath)
             return false;
         }
     }
-    if (!QFile::copy(filepath, finalPath)) {
+    if (!FS::copyFile(filepath, finalPath)) {
         return false;
     }
 
@@ -886,7 +909,9 @@ bool PackProfile::installCustomJar_internal(QString filepath)
     f->name = target_name;
     f->uid = target_id;
     QString patchFileName = FS::PathCombine(patchDir, target_id + ".json");
-
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    if (!FS::write(patchFileName, OneSixVersionFormat::versionFileToJson(f).toJson())) return false;
+#else
     QFile file(patchFileName);
     if (!file.open(QFile::WriteOnly)) {
         qCCritical(instanceProfileC) << d->m_instance->name() << "|" << "Error opening" << file.fileName()
@@ -895,6 +920,7 @@ bool PackProfile::installCustomJar_internal(QString filepath)
     }
     file.write(OneSixVersionFormat::versionFileToJson(f).toJson());
     file.close();
+#endif
 
     appendComponent(makeShared<Component>(this, f->uid, f));
 
@@ -925,7 +951,7 @@ bool PackProfile::installAgents_internal(QStringList filepaths)
         const QFileInfo targetInfo(target);
         Q_ASSERT(!targetInfo.exists());
 
-        if (!QFile::copy(source, target))
+        if (!FS::copyFile(source, target))
             return false;
 
         auto versionFile = std::make_shared<VersionFile>();
@@ -942,6 +968,9 @@ bool PackProfile::installAgents_internal(QStringList filepaths)
         versionFile->name = targetName;
         versionFile->uid = targetId;
 
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+        if (!FS::write(FS::PathCombine(patchDir, targetId + ".json"), OneSixVersionFormat::versionFileToJson(versionFile).toJson())) return false;
+#else
         QFile patchFile(FS::PathCombine(patchDir, targetId + ".json"));
 
         if (!patchFile.open(QFile::WriteOnly)) {
@@ -952,6 +981,7 @@ bool PackProfile::installAgents_internal(QStringList filepaths)
 
         patchFile.write(OneSixVersionFormat::versionFileToJson(versionFile).toJson());
         patchFile.close();
+#endif
 
         appendComponent(makeShared<Component>(this, versionFile->uid, versionFile));
     }

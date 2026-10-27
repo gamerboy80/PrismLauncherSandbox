@@ -38,6 +38,12 @@
 #include <QDebug>
 #include <QMap>
 #include <QProcess>
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+#include <QFile>
+#include <QFileInfo>
+#include <QDir>
+#include <QRegularExpression>
+#endif
 #include <utility>
 
 #include "Commandline.h"
@@ -50,6 +56,43 @@ JavaChecker::JavaChecker(QString path, QString args, int minMem, int maxMem, int
 
 void JavaChecker::executeTask()
 {
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    // Discovery is data-only. A real JVM check is performed later inside the prepared game sandbox.
+    Result result{m_path, m_id};
+    QFile release(QDir(QFileInfo(m_path).absolutePath()).absoluteFilePath("../release"));
+    if (!release.open(QIODevice::ReadOnly)) {
+        result.validity = Result::Validity::Errored;
+        result.errorLog = tr("Cannot inspect Java's release file. Select a complete managed Java runtime.");
+    } else {
+        const QString text = QString::fromUtf8(release.readAll());
+        auto field = [&text](const QString& name) {
+            return QRegularExpression("(?:^|\\n)" + name + "=\"([^\"]*)\"").match(text).captured(1);
+        };
+        QString arch = field("OS_ARCH");
+        if (arch.isEmpty()) {
+            QFile executable(m_path);
+            if (executable.open(QIODevice::ReadOnly)) {
+                const QByteArray header = executable.read(8);
+                if (header.size() == 8 && header.left(4) == QByteArray::fromHex("cffaedfe")) {
+                    const QByteArray cpu = header.mid(4, 4);
+                    if (cpu == QByteArray::fromHex("0c000001")) arch = "aarch64";
+                    else if (cpu == QByteArray::fromHex("07000001")) arch = "x86_64";
+                }
+            }
+        }
+        result.javaVersion = field("JAVA_VERSION");
+        result.javaVendor = field("IMPLEMENTOR");
+        result.is_64bit = arch == "aarch64" || arch == "arm64" || arch == "amd64" || arch == "x86_64";
+        result.mojangPlatform = result.is_64bit ? "64" : "32";
+        result.realPlatform = arch;
+        result.validity = !field("JAVA_VERSION").isEmpty() && result.is_64bit ? Result::Validity::Valid : Result::Validity::Errored;
+        if (result.javaVendor.isEmpty()) result.javaVendor = "Managed Java";
+        result.outLog = "Static runtime metadata; execution deferred to App Sandbox.";
+    }
+    emit checkFinished(result);
+    emitSucceeded();
+    return;
+#endif
     QString checkerJar = JavaUtils::getJavaCheckPath();
 
     if (checkerJar.isEmpty()) {

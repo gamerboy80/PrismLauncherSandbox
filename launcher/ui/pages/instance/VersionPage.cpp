@@ -69,6 +69,9 @@
 #include "Result.h"
 #include "icons/IconList.h"
 #include "minecraft/PackProfile.h"
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+#include "macsandbox/manager/SandboxLaunchController.h"
+#endif
 #include "minecraft/auth/AccountList.h"
 
 #include "meta/Index.h"
@@ -293,6 +296,11 @@ void VersionPage::on_actionReplace_Minecraft_jar_triggered()
                                           APPLICATION->settings()->get("CentralModsDir").toString(), this->parentWidget());
     if (!jarPath.isEmpty()) {
         m_profile->installCustomJar(jarPath);
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+        QString error;
+        if (!SandboxLaunchController::setPolicy(m_inst, {}, "offline", &error))
+            QMessageBox::warning(this, tr("Cannot set custom client policy"), error);
+#endif
     }
     updateButtons();
 }

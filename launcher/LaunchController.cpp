@@ -56,6 +56,9 @@
 
 #include "BuildConfig.h"
 #include "JavaCommon.h"
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+#include "macsandbox/manager/SandboxLaunchController.h"
+#endif
 #include "launch/steps/TextPrint.h"
 #include "tasks/Task.h"
 #include "ui/dialogs/ChooseOfflineNameDialog.h"
@@ -68,6 +71,12 @@ void LaunchController::executeTask()
         emitFailed(tr("No instance specified!"));
         return;
     }
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    if (!m_instance->settings()->get("Profiler").toString().isEmpty()) {
+        emitFailed(tr("External profiler launchers are not supported by the sandbox backend."));
+        return;
+    }
+#endif
 
     if (!JavaCommon::checkJVMArgs(m_instance->settings()->get("JvmArgs").toString(), m_parentWidget)) {
         emitFailed(tr("Invalid Java arguments specified. Please fix this first."));
@@ -278,6 +287,22 @@ QString LaunchController::askOfflineName(const QString& playerName, bool* ok)
 
 void LaunchController::login()
 {
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    QString policyError;
+    const auto sandboxPolicy = SandboxLaunchController::policy(m_instance, &policyError);
+    if (sandboxPolicy.isEmpty()) { emitFailed(policyError); return; }
+    if (sandboxPolicy["account"].toString() == "offline") {
+        m_session = std::make_shared<AuthSession>();
+        m_session->player_name = m_offlineName.isEmpty() ? "Player" : m_offlineName;
+        m_session->MakeOffline(m_session->player_name);
+        m_session->uuid = MinecraftAccount::uuidFromUsername(m_session->player_name).toString(QUuid::Id128);
+        m_session->user_type = "offline";
+        m_session->launchMode = LaunchMode::Offline;
+        m_actualLaunchMode = LaunchMode::Offline;
+        launchInstance();
+        return;
+    }
+#endif
     decideAccount();
 
     LaunchDecision decision = decideLaunchMode();

@@ -70,6 +70,14 @@ struct GradleSpecifier {
         if (match.lastCapturedIndex() >= 5) {
             m_extension = match.captured(5);
         }
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+        // Instance metadata must never turn a dependency download into a manager-directory write.
+        for (const QString& part : {m_groupId, m_artifactId, m_version, m_classifier, m_extension.value_or("jar")}) {
+            if (part.contains('/') || part.contains('\\') || part == "." || part == ".." || part.contains(QChar::Null)) m_valid = false;
+        }
+        if (m_groupId.startsWith('.') || m_groupId.endsWith('.') || m_groupId.contains("..")) m_valid = false;
+        if (!m_valid) m_invalidValue = value;
+#endif
     }
     QString serialize() const
     {
@@ -99,6 +107,9 @@ struct GradleSpecifier {
     }
     QString toPath(const QString& filenameOverride = QString()) const
     {
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+        if (filenameOverride.contains('/') || filenameOverride.contains('\\') || filenameOverride == "." || filenameOverride == ".." || filenameOverride.contains(QChar::Null)) return {};
+#endif
         if (!m_valid) {
             return QString();
         }
@@ -117,7 +128,15 @@ struct GradleSpecifier {
     inline QString version() const { return m_version; }
     inline QString groupId() const { return m_groupId; }
     inline QString artifactId() const { return m_artifactId; }
-    inline void setClassifier(const QString& classifier) { m_classifier = classifier; }
+    inline void setClassifier(const QString& classifier) {
+        m_classifier = classifier;
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+        if (classifier.contains('/') || classifier.contains('\\') || classifier == "." || classifier == ".." || classifier.contains(QChar::Null)) {
+            m_invalidValue = m_groupId + ':' + m_artifactId + ':' + m_version + ':' + classifier;
+            m_valid = false;
+        }
+#endif
+    }
     inline QString classifier() const { return m_classifier; }
     inline std::optional<QString> extension() const { return m_extension; }
     inline QString artifactPrefix() const { return m_groupId + ":" + m_artifactId; }

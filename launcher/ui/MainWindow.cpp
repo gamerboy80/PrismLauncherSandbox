@@ -1507,11 +1507,14 @@ void MainWindow::on_actionDeleteInstance_triggered()
     auto shortcuts = m_selectedInstance->shortcuts();
     if (!shortcuts.isEmpty())
         shortcutStr = tr(" and its %n registered shortcut(s)", "", shortcuts.size());
-    auto response = CustomMessageBox::selectable(this, tr("Confirm Deletion"),
-                                                 tr("You are about to delete \"%1\"%2.\n"
+    QString deletionMessage = tr("You are about to delete \"%1\"%2.\n"
                                                     "This may be permanent and will completely delete the instance.\n\n"
                                                     "Are you sure?")
-                                                     .arg(m_selectedInstance->name(), shortcutStr),
+                                                     .arg(m_selectedInstance->name(), shortcutStr);
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    deletionMessage += tr("\n\nThis includes the instance's saves. Managed trash keeps recoverable files under the manager's private trash folder. The macOS container is retained; container data is not deleted automatically.");
+#endif
+    auto response = CustomMessageBox::selectable(this, tr("Confirm Deletion"), deletionMessage,
                                                  QMessageBox::Warning, QMessageBox::Yes | QMessageBox::No, QMessageBox::No)
                         ->exec();
 

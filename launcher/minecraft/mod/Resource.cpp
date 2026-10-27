@@ -299,7 +299,11 @@ bool Resource::enable(EnableAction action)
             path = FS::getUniqueResourceName(path);
         }
     }
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    if (!FS::move(m_fileInfo.absoluteFilePath(), path)) {
+#else
     if (!file.rename(path)) {
+#endif
         return false;
     }
 

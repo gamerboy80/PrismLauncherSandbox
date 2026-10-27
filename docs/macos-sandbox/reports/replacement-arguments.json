@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "passed": true,
+  "instance": "7e8037cf03cb402e879faa249991ccf2",
+  "nativeApprovalFingerprint": "f533d2cfaa15b1c1cb6b46b91a385ad016762865a94fbf1c15e2bdc14cb17fbc",
+  "exit": {
+    "stopped": false,
+    "generation": "400f14b36a035dff04070312",
+    "signal": 0,
+    "exitCode": 0,
+    "version": 1
+  },
+  "output": "dependency=local-manifest-library\nreplacement.arguments=true\nreplacement.offline=true\n"
+}

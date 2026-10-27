@@ -247,6 +247,17 @@ endif()
 # Java downloader
 option(Launcher_ENABLE_JAVA_DOWNLOADER "Build the java downloader feature" ${Launcher_ENABLE_JAVA_DOWNLOADER_DEFAULT})
 
+option(Launcher_MACOS_SANDBOX_MANAGER "Build the local manager with independently sandboxed games" OFF)
+if(Launcher_MACOS_SANDBOX_MANAGER)
+    if(NOT APPLE)
+        message(FATAL_ERROR "The sandbox manager requires macOS")
+    endif()
+    set(Launcher_AppID "org.prismlauncher.PrismLauncher.LocalSandboxManager")
+    set(Launcher_MACOS_SANDBOX_CURSEFORGE_API_KEY "" CACHE STRING "Your own derivative-build CurseForge API key")
+    set(Launcher_CURSEFORGE_API_KEY "${Launcher_MACOS_SANDBOX_CURSEFORGE_API_KEY}")
+    add_compile_definitions(PRISM_MACOS_SANDBOX_MANAGER)
+endif()
+
 # Native libraries
 if(UNIX AND APPLE)
     set(Launcher_GLFW_LIBRARY_NAME "libglfw.dylib" CACHE STRING "Name of native glfw library")
@@ -278,6 +289,9 @@ set(Launcher_MSA_CLIENT_ID "c36a9fb6-4f2a-41ff-90bd-ae7cc92031eb" CACHE STRING "
 # NOTE: CurseForge requires you to change this if you make any kind of derivative work.
 # This key was issued specifically for Prism Launcher
 set(Launcher_CURSEFORGE_API_KEY "$2a$10$wuAJuNZuted3NORVmpgUC.m8sI.pv1tOPKZyBgLFGjxFp/br0lZCC" CACHE STRING "API key for the CurseForge platform")
+if(Launcher_MACOS_SANDBOX_MANAGER)
+    set(Launcher_CURSEFORGE_API_KEY "${Launcher_MACOS_SANDBOX_CURSEFORGE_API_KEY}")
+endif()
 
 set(Launcher_COMPILER_NAME ${CMAKE_CXX_COMPILER_ID})
 set(Launcher_COMPILER_VERSION ${CMAKE_CXX_COMPILER_VERSION})
@@ -385,6 +399,9 @@ include(ECMQtDeclareLoggingCategory)
 
 set(Launcher_APP_BINARY_NAME "prismlauncher" CACHE STRING "Name of the Launcher binary")
 add_subdirectory(program_info)
+if(Launcher_MACOS_SANDBOX_MANAGER)
+    set(Launcher_AppID "org.prismlauncher.PrismLauncher.LocalSandboxManager")
+endif()
 
 ####################################### Install layout #######################################
 
@@ -407,6 +424,9 @@ if(UNIX AND APPLE)
     set(FRAMEWORK_DEST_DIR "${Launcher_Name}.app/Contents/Frameworks")
     set(RESOURCES_DEST_DIR "${Launcher_Name}.app/Contents/Resources")
     set(JARS_DEST_DIR "${Launcher_Name}.app/Contents/MacOS/jars")
+    if(Launcher_MACOS_SANDBOX_MANAGER)
+        set(JARS_DEST_DIR "${RESOURCES_DEST_DIR}/jars")
+    endif()
 
     # Mac bundle settings
     set(MACOSX_BUNDLE_BUNDLE_NAME "${Launcher_DisplayName}")
@@ -424,7 +444,7 @@ if(UNIX AND APPLE)
     set(MACOSX_SPARKLE_SHA256 "52bf9e88cdd972fc0c81501377a880e90d47031bd8ca5462488f843e2609e192" CACHE STRING "SHA256 checksum for Sparkle release archive")
     set(MACOSX_SPARKLE_DIR "${CMAKE_BINARY_DIR}/frameworks/Sparkle")
 
-    if(NOT MACOSX_SPARKLE_UPDATE_PUBLIC_KEY STREQUAL "" AND NOT MACOSX_SPARKLE_UPDATE_FEED_URL STREQUAL "")
+    if(NOT Launcher_MACOS_SANDBOX_MANAGER AND NOT MACOSX_SPARKLE_UPDATE_PUBLIC_KEY STREQUAL "" AND NOT MACOSX_SPARKLE_UPDATE_FEED_URL STREQUAL "")
         set(Launcher_ENABLE_UPDATER YES)
     endif()
 

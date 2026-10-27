@@ -37,6 +37,9 @@
 
 #include <LoggedProcess.h>
 #include <launch/LaunchStep.h>
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+#include "macsandbox/manager/SandboxLaunchController.h"
+#endif
 
 class LaunchCommand : public LaunchStep {
     Q_OBJECT
@@ -53,6 +56,9 @@ class LaunchCommand : public LaunchStep {
 
    private:
     LoggedProcess m_process;
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    std::unique_ptr<SandboxLaunchController> m_sandbox;
+#endif
     QString m_command;
     QString m_phaseName;
 };

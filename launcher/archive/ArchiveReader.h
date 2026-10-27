@@ -49,7 +49,7 @@ class ArchiveReader {
     class File {
        public:
         File();
-        virtual ~File() = default;
+        virtual ~File();
 
         QString filename();
         bool isFile();
@@ -63,11 +63,14 @@ class ArchiveReader {
 
        private:
         int readNextHeader();
+        Result<> openArchive(const QString& path, size_t blockSize);
 
        private:
         friend ArchiveReader;
         Handle<struct archive, archive_read_free> m_archive;
         archive_entry* m_entry;
+        int m_sourceFD = -1;
+        qint64 m_extractedBytes = 0;
     };
 
     Result<std::unique_ptr<File>> goToFile(const QString& filename);

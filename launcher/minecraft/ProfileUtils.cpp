@@ -40,6 +40,7 @@
 #include "minecraft/OneSixVersionFormat.h"
 #include "minecraft/VersionFilterData.h"
 
+#include "FileSystem.h"
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QSaveFile>
@@ -70,6 +71,13 @@ namespace ProfileUtils {
 
 VersionFilePtr parseJsonFile(const QFileInfo& fileInfo, const bool requireOrder)
 {
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    auto content = FS::read(fileInfo.absoluteFilePath());
+    if (!content) return createErrorVersionFile(fileInfo.completeBaseName(), fileInfo.absoluteFilePath(), QObject::tr("Cannot safely read the version file."));
+    auto data = *content;
+    QJsonParseError error;
+    QJsonDocument doc = QJsonDocument::fromJson(data, &error);
+#else
     QFile file(fileInfo.absoluteFilePath());
     if (!file.open(QFile::ReadOnly)) {
         auto errorStr = QObject::tr("Unable to open the version file %1: %2.").arg(fileInfo.fileName(), file.errorString());
@@ -79,6 +87,7 @@ VersionFilePtr parseJsonFile(const QFileInfo& fileInfo, const bool requireOrder)
     auto data = file.readAll();
     QJsonDocument doc = QJsonDocument::fromJson(data, &error);
     file.close();
+#endif
     if (error.error != QJsonParseError::NoError) {
         int line = 1;
         int column = 0;
@@ -102,6 +111,9 @@ VersionFilePtr parseJsonFile(const QFileInfo& fileInfo, const bool requireOrder)
 bool saveJsonFile(const QJsonDocument& doc, const QString& filename)
 {
     auto data = doc.toJson();
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    return FS::write(filename, data).has_value();
+#else
     QSaveFile jsonFile(filename);
     if (!jsonFile.open(QIODevice::WriteOnly)) {
         qWarning() << "Couldn't open" << filename << "for writing:" << jsonFile.errorString();
@@ -114,6 +126,7 @@ bool saveJsonFile(const QJsonDocument& doc, const QString& filename)
         return false;
     }
     return true;
+#endif
 }
 
 void removeLwjglFromPatch(VersionFilePtr patch)

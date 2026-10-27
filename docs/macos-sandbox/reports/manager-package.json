@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "app": "/Users/patrickliang/Documents/development/PRISMPRISM/PrismLauncher.app",
+  "signatureVerified": true,
+  "externalDependencies": [],
+  "relocatedLibraries": {},
+  "additionalSystemPackagesInstalled": [],
+  "initializedSubmodules": {
+    "libraries/libnbtplusplus": "3538933614059f0f44388a2b16f3db25ce42285b"
+  },
+  "qtAccessibilityFix": "QTBUG-149612"
+}

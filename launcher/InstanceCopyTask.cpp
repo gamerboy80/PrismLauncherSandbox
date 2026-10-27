@@ -17,8 +17,16 @@ InstanceCopyTask::InstanceCopyTask(BaseInstance* origInstance, const InstanceCop
     m_useHardLinks = prefs.isLinkRecursivelyEnabled() && prefs.isUseHardLinksEnabled();
     m_copySaves = prefs.isLinkRecursivelyEnabled() && prefs.isDontLinkSavesEnabled() && prefs.isCopySavesEnabled();
     m_useClone = prefs.isUseCloneEnabled();
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    m_useLinks = false;
+    m_useHardLinks = false;
+#endif
 
     QString filters = prefs.getSelectedFiltersAsRegex();
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    if (!filters.isEmpty()) filters += "|";
+    filters += "^[.]prism-control(/|$)";
+#endif
     if (m_useLinks || m_useHardLinks) {
         if (!filters.isEmpty())
             filters += "|";

@@ -44,6 +44,9 @@
 
 QString askToUpdateInstanceDirName(BaseInstance* instance, const QString& oldName, const QString& newName, QWidget* parent)
 {
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    return {}; // Instance folders are stable isolation identities, independent of display names.
+#endif
     if (oldName == newName)
         return QString();
 

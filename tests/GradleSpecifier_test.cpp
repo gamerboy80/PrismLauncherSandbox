@@ -7,6 +7,20 @@ class GradleSpecifierTest : public QObject {
    private slots:
     void initTestCase() {}
     void cleanupTestCase() {}
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    void sandboxRejectsCoordinateTraversalAndClassifierMutation() {
+        for (const auto& input : {"group:../artifact:1.0", "group:artifact:../../manager", "group..escape:artifact:1.0", "group:artifact:1.0:../../native"}) {
+            GradleSpecifier spec(input);
+            QVERIFY(!spec.valid());
+            QVERIFY(spec.toPath().isEmpty());
+        }
+        GradleSpecifier native("org.lwjgl:lwjgl:3.3.1");
+        native.setClassifier("../../manager/accounts");
+        QVERIFY(!native.valid());
+        QVERIFY(native.toPath().isEmpty());
+        QVERIFY(GradleSpecifier("group:artifact:1.0").toPath("../outside.jar").isEmpty());
+    }
+#endif
 
     void test_Positive_data()
     {

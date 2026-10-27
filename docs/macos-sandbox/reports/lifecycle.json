@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "passed": true,
+  "concurrentInstances": [
+    "52766d39483c480eb1b38d47f58509cb",
+    "1a7cd5dc58d957c3b56c902015f273d2"
+  ],
+  "duplicateRunPrevented": true,
+  "gamesSurvivedManagerExit": true,
+  "restartRecognizedSameRun": true,
+  "verifiedDetachedStop": true,
+  "exits": {
+    "52766d39483c480eb1b38d47f58509cb": {
+      "stopped": true,
+      "generation": "06b222af803ed9bd001a0f86",
+      "signal": 0,
+      "exitCode": 143,
+      "version": 1
+    },
+    "1a7cd5dc58d957c3b56c902015f273d2": {
+      "stopped": true,
+      "generation": "75f5262e97d2fdbb76742b0a",
+      "signal": 0,
+      "exitCode": 143,
+      "version": 1
+    }
+  }
+}

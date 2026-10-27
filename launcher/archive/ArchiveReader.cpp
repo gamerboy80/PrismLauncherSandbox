@@ -30,8 +30,33 @@
 #include <optional>
 
 #include "Handle.h"
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+#include "macsandbox/manager/SandboxFileAccess.h"
+#include <unistd.h>
+#endif
 
 namespace MMCZip {
+ArchiveReader::File::~File() {
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    archive_read_close(m_archive.get());
+    if (m_sourceFD >= 0) ::close(m_sourceFD);
+#endif
+}
+
+Result<> ArchiveReader::File::openArchive(const QString& path, size_t blockSize) {
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    if (SandboxFileAccess::instancePath(path)) {
+        m_sourceFD = SandboxFileAccess::openRead(path);
+        if (m_sourceFD < 0 || archive_read_open_fd(m_archive.get(), m_sourceFD, blockSize) != ARCHIVE_OK)
+            return std::unexpected{QString("Cannot safely open instance archive: %1").arg(path)};
+        return {};
+    }
+#endif
+    const auto filename = path.toStdWString();
+    if (archive_read_open_filename_w(m_archive.get(), filename.data(), blockSize) != ARCHIVE_OK)
+        return std::unexpected{QString("Failed to open archive file %1: %2").arg(path, error())};
+    return {};
+}
 QStringList ArchiveReader::getFiles()
 {
     return m_fileNames;
@@ -71,6 +96,10 @@ Result<QByteArray> ArchiveReader::File::readAll()
 
     int status = 0;
     while ((status = archive_read_data_block(m_archive.get(), &buff, &size, &offset)) == ARCHIVE_OK) {
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+        if (size > 512 * 1024 * 1024 || data.size() > 512 * 1024 * 1024 - static_cast<qint64>(size))
+            return std::unexpected{QString("Archive entry exceeds the 512 MiB inspection limit")};
+#endif
         data.append(static_cast<const char*>(buff), static_cast<qsizetype>(size));
     }
     if (status != ARCHIVE_EOF && status != ARCHIVE_OK) {
@@ -98,10 +127,7 @@ auto ArchiveReader::goToFile(const QString& filename) -> Result<std::unique_ptr<
     auto* a = f->m_archive.get();
     archive_read_support_format_all(a);
     archive_read_support_filter_all(a);
-    auto fileName = m_archivePath.toStdWString();
-    if (archive_read_open_filename_w(a, fileName.data(), m_blockSize) != ARCHIVE_OK) {
-        return std::unexpected{ QString("Failed to open archive file %1: %2").arg(m_archivePath, archive_error_string(a)) };
-    }
+    TRY(f->openArchive(m_archivePath, m_blockSize))
 
     while (f->readNextHeader() == ARCHIVE_OK) {
         if (f->filename() == filename) {
@@ -183,6 +209,27 @@ Result<> ArchiveReader::File::writeFile(archive* out, const QString& targetFileN
 
 Result<> ArchiveReader::File::writeFile(archive* out, const QString& targetFileName, std::optional<QDir> root, bool notBlock)
 {
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    if (!targetFileName.isEmpty() && SandboxFileAccess::instancePath(targetFileName)) {
+        const auto name = filename();
+        if (name.startsWith('/') || name.contains('\\') || name.split('/').contains("..") ||
+            archive_entry_symlink(m_entry) || archive_entry_hardlink(m_entry))
+            return std::unexpected{QString("Unsafe instance archive entry: %1").arg(name)};
+        if (root && !QDir::cleanPath(targetFileName).startsWith(root->absolutePath() + '/'))
+            return std::unexpected{QString("Archive destination is outside its extraction root")};
+        const auto type = archive_entry_filetype(m_entry);
+        if (type == AE_IFDIR) {
+            if (!SandboxFileAccess::directories(targetFileName)) return std::unexpected{QString("Cannot safely create archive directory")};
+            return {};
+        }
+        if (type != AE_IFREG) return std::unexpected{QString("Non-regular instance archive entry")};
+        TRY_INTO(const auto data, readAll())
+        m_extractedBytes += data.size();
+        if (m_extractedBytes > qint64(4) * 1024 * 1024 * 1024) return std::unexpected{QString("Archive extraction exceeds 4 GiB")};
+        if (!SandboxFileAccess::write(targetFileName, data)) return std::unexpected{QString("Cannot safely publish archive entry")};
+        return {};
+    }
+#endif
     auto* entry = m_entry;
     Handle<archive_entry, archive_entry_free> entryClone;
     if (!targetFileName.isEmpty()) {
@@ -230,10 +277,7 @@ Result<> ArchiveReader::parse(const std::function<Result<bool>(File*)>& doStuff)
     auto* a = f->m_archive.get();
     archive_read_support_format_all(a);
     archive_read_support_filter_all(a);
-    auto fileName = m_archivePath.toStdWString();
-    if (archive_read_open_filename_w(a, fileName.data(), m_blockSize) != ARCHIVE_OK) {
-        return std::unexpected{ QString("Failed to open archive file %1: %2").arg(m_archivePath, f->error()) };
-    }
+    TRY(f->openArchive(m_archivePath, m_blockSize))
 
     while (f->readNextHeader() == ARCHIVE_OK) {
         TRY_INTO(const bool shouldStop, doStuff(f.get()))

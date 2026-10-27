@@ -305,7 +305,7 @@ QString SkinList::installSkin(const QString& file, const QString& name)
 
     QString target = getUniqueFile(m_dir.absolutePath(), name.isEmpty() ? fileinfo.fileName() : name);
 
-    return QFile::copy(file, target) ? "" : tr("Unable to copy file");
+    return FS::copyFile(file, target) ? "" : tr("Unable to copy file");
 }
 
 int SkinList::getSkinIndex(const QString& key) const

@@ -17,6 +17,9 @@
 #include "ui/pages/instance/TexturePackPage.h"
 #include "ui/pages/instance/VersionPage.h"
 #include "ui/pages/instance/WorldListPage.h"
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+#include "macsandbox/manager/SandboxPages.h"
+#endif
 
 class InstancePageProvider : protected QObject, public BasePageProvider {
     Q_OBJECT
@@ -28,6 +31,14 @@ class InstancePageProvider : protected QObject, public BasePageProvider {
     {
         QList<BasePage*> values;
         values.append(new LogPage(inst));
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+        values.append(new SandboxInstancePage(inst));
+        if (inst->settings()->get("SandboxStandalone").toBool()) {
+            values.append(new InstanceSettingsPage(inst));
+            values.append(new OtherLogsPage("logs", tr("Other Logs"), "Other-Logs", inst));
+            return values;
+        }
+#endif
         values.append(new VersionPage(inst));
         values.append(ManagedPackPage::createPage(inst));
         auto modsPage = new ModFolderPage(inst, inst->loaderModList());

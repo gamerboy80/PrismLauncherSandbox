@@ -184,6 +184,14 @@ void MinecraftInstance::loadSpecificSettings()
 {
     if (isSpecificSettingsLoaded())
         return;
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    m_settings->registerSetting("SandboxStandalone", false);
+    m_settings->registerSetting("SandboxCustom", false);
+    m_settings->registerSetting("SandboxClientJar", "");
+    m_settings->registerSetting("SandboxMainClass", "");
+    m_settings->registerSetting("SandboxClientArguments", "");
+    m_settings->registerSetting("SandboxJavaMajor", 21);
+#endif
 
     // Java Settings
     auto locationOverride = m_settings->registerSetting("OverrideJavaLocation", false);
@@ -1087,7 +1095,12 @@ QMap<QString, QString> MinecraftInstance::makeProfileVarMapping(std::shared_ptr<
 
 QStringList MinecraftInstance::getLogFileSearchPaths()
 {
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    return { FS::PathCombine(gameRoot(), "crash-reports"), FS::PathCombine(gameRoot(), "logs"), gameRoot(),
+             FS::PathCombine(instanceRoot(), ".prism-control") };
+#else
     return { FS::PathCombine(gameRoot(), "crash-reports"), FS::PathCombine(gameRoot(), "logs"), gameRoot() };
+#endif
 }
 
 QString MinecraftInstance::getStatusbarDescription()
@@ -1145,6 +1158,24 @@ QList<LaunchStep::Ptr> MinecraftInstance::createUpdateTask()
 
 LaunchTask* MinecraftInstance::createLaunchTask(AuthSessionPtr session, MinecraftTarget::Ptr targetToJoin)
 {
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    if (settings()->get("SandboxStandalone").toBool()) {
+        auto process = LaunchTask::create(this);
+        QList<int> majors{settings()->get("SandboxJavaMajor").toInt()};
+        getPackProfile()->getProfile()->applyCompatibleJavaMajors(majors);
+        process->appendStep(makeShared<CreateGameFolders>(process.get()));
+        process->appendStep(makeShared<AutoInstallJava>(process.get()));
+        process->appendStep(makeShared<CheckJava>(process.get()));
+        auto launch = makeShared<LauncherPartLaunch>(process.get());
+        launch->setAuthSession(session);
+        launch->setWorkingDirectory(gameRoot());
+        process->appendStep(launch);
+        if (session) process->setCensorFilter(createCensorFilterFromSession(session));
+        m_launchProcess = std::move(process);
+        emit launchTaskChanged(m_launchProcess.get());
+        return m_launchProcess.get();
+    }
+#endif
     updateRuntimeContext();
     auto process = LaunchTask::create(this);
     auto pptr = process.get();
@@ -1191,6 +1222,9 @@ LaunchTask* MinecraftInstance::createLaunchTask(AuthSessionPtr session, Minecraf
     // load meta
     {
         auto mode = session->launchMode != LaunchMode::Offline ? Net::Mode::Online : Net::Mode::Offline;
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+        mode = Net::Mode::Online; // Account mode and the manager's dependency downloads are independent.
+#endif
         process->appendStep(makeShared<TaskStepWrapper>(pptr, makeShared<MinecraftLoadAndCheck>(this, mode)));
     }
 
@@ -1210,8 +1244,12 @@ LaunchTask* MinecraftInstance::createLaunchTask(AuthSessionPtr session, Minecraf
     }
 
     // if we aren't in offline mode
-    if (session->launchMode != LaunchMode::Offline) {
-        process->appendStep(makeShared<ClaimAccount>(pptr, session));
+    if (session->launchMode != LaunchMode::Offline
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+        || true
+#endif
+    ) {
+        if (session->launchMode != LaunchMode::Offline) process->appendStep(makeShared<ClaimAccount>(pptr, session));
         for (auto t : createUpdateTask()) {
             process->appendStep(makeShared<TaskStepWrapper>(pptr, t));
         }

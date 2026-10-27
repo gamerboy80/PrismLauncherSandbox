@@ -91,6 +91,12 @@ CopyInstanceDialog::CopyInstanceDialog(BaseInstance* original, QWidget* parent)
 
     m_cloneSupported = FS::canCloneOnFS(detectedFS);
     m_linkSupported = FS::canLinkOnFS(detectedFS);
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    m_linkSupported = false;
+    const auto linkExplanation = tr("Sandboxed instances require independent files. Use copies or reflinks.");
+    ui->symbolicLinksCheckbox->setToolTip(linkExplanation);
+    ui->hardLinksCheckbox->setToolTip(linkExplanation);
+#endif
 
     if (m_cloneSupported) {
         ui->cloneSupportedLabel->setText(tr("Reflinks are supported on %1").arg(FS::getFilesystemTypeName(detectedFS)));

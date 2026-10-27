@@ -6,6 +6,7 @@
 #include <QtConcurrentRun>
 
 #include <MurmurHash2.h>
+#include "FileSystem.h"
 
 namespace Hashing {
 
@@ -125,8 +126,14 @@ QString hash(QIODevice* device, Algorithm type)
 
 QString hash(QString fileName, Algorithm type)
 {
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    auto data = FS::read(fileName);
+    if (!data) return {};
+    return hash(*data, type);
+#else
     QFile file(fileName);
     return hash(&file, type);
+#endif
 }
 
 QString hash(QByteArray data, Algorithm type)

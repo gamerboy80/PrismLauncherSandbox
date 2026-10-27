@@ -1,0 +1,94 @@
+{
+  "version": 1,
+  "passed": true,
+  "results": {
+    "chunkingPingRedaction": {
+      "version": 1,
+      "run": "ba1684cf-f057-4edb-b5fa-e1d7613e561c",
+      "exit": {
+        "stopped": false,
+        "exitCode": 0,
+        "signal": 0
+      },
+      "events": [
+        "Hello",
+        "Ready",
+        "Pong",
+        "Started",
+        "Stdout",
+        "Stdout",
+        "Stdout",
+        "Stdout",
+        "Exited"
+      ],
+      "stdout": "dependency=local-manifest-library\n<redacted>\ngraphics.ready=true\nclient.complete=true\n",
+      "stderr": "",
+      "control": "/private/tmp/prism-sandbox-6okr8hv1/instances/probe/.prism-control/ba1684cf-f057-4edb-b5fa-e1d7613e561c",
+      "app": "/private/tmp/prism-sandbox-6okr8hv1/apps/4c6682f3050849dd82446826f93ec6ce/f3cdf88bc8eef578854235ca/Game.app"
+    },
+    "invalidDescriptor": "{'message': 'Unsupported launch description schema.', 'code': 'UNSUPPORTED_DESCRIPTOR_VERSION'}",
+    "unreadInputStop": {
+      "version": 1,
+      "run": "751cc10f-14f7-44e4-8c49-6ddeff6977a9",
+      "exit": {
+        "stopped": true,
+        "exitCode": -1,
+        "signal": 15
+      },
+      "events": [
+        "Hello",
+        "Ready",
+        "Pong",
+        "Started",
+        "Exited"
+      ],
+      "stdout": "",
+      "stderr": "",
+      "control": "/private/tmp/prism-sandbox-6okr8hv1/instances/probe/.prism-control/751cc10f-14f7-44e4-8c49-6ddeff6977a9",
+      "app": "/private/tmp/prism-sandbox-6okr8hv1/apps/4c6682f3050849dd82446826f93ec6ce/f3cdf88bc8eef578854235ca/Game.app"
+    },
+    "outputFloodStop": {
+      "version": 1,
+      "run": "c7f7b337-f1ce-4b5f-b197-4d89c9eddca8",
+      "exit": {
+        "stopped": true,
+        "exitCode": -1,
+        "signal": 15
+      },
+      "events": [
+        "Hello",
+        "Ready",
+        "Pong",
+        "Started",
+        "Exited"
+      ],
+      "stdout": "",
+      "stderr": "",
+      "control": "/private/tmp/prism-sandbox-6okr8hv1/instances/probe/.prism-control/c7f7b337-f1ce-4b5f-b197-4d89c9eddca8",
+      "app": "/private/tmp/prism-sandbox-6okr8hv1/apps/4c6682f3050849dd82446826f93ec6ce/f3cdf88bc8eef578854235ca/Game.app"
+    },
+    "descendantEscalation": {
+      "version": 1,
+      "run": "c6cc235f-335d-4b4c-8a23-95d903378897",
+      "exit": {
+        "stopped": false,
+        "exitCode": 0,
+        "signal": 0
+      },
+      "events": [
+        "Hello",
+        "Ready",
+        "Pong",
+        "Started",
+        "Stdout",
+        "Exited"
+      ],
+      "stdout": "descendant=26921\n",
+      "stderr": "",
+      "control": "/private/tmp/prism-sandbox-6okr8hv1/instances/probe/.prism-control/c6cc235f-335d-4b4c-8a23-95d903378897",
+      "app": "/private/tmp/prism-sandbox-6okr8hv1/apps/4c6682f3050849dd82446826f93ec6ce/f3cdf88bc8eef578854235ca/Game.app",
+      "elapsedSeconds": 10.550840249999993,
+      "descendantStateAfterExit": "absent"
+    }
+  }
+}

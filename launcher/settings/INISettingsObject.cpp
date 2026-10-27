@@ -15,6 +15,7 @@
 
 #include "INISettingsObject.h"
 #include "Setting.h"
+#include "FileSystem.h"
 
 #include <QDebug>
 #include <QFile>
@@ -28,7 +29,7 @@ INISettingsObject::INISettingsObject(QStringList paths, QObject* parent) : Setti
 
         if (path != first_path && QFile::exists(path)) {
             // Copy the fallback to the preferred path.
-            QFile::copy(path, first_path);
+            FS::copyFile(path, first_path);
             qDebug() << "Copied settings from" << path << "to" << first_path;
             break;
         }

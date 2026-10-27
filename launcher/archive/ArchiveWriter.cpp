@@ -30,6 +30,13 @@
 
 #include "Handle.h"
 #include "StringUtils.h"
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+#include "FileSystem.h"
+#include "macsandbox/manager/SandboxFileAccess.h"
+#include <QCoreApplication>
+#include <QUuid>
+#include <QVariant>
+#endif
 
 #if defined Q_OS_WIN32
 #ifndef WIN32_LEAN_AND_MEAN
@@ -54,6 +61,14 @@ ArchiveWriter::~ArchiveWriter()
 
 Result<> ArchiveWriter::open()
 {
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    if (SandboxFileAccess::instancePath(m_filename)) {
+        m_sandboxTarget = m_filename;
+        const QString staging = QCoreApplication::instance()->property("prismSandboxRoot").toString() + "/manager/archive-staging";
+        if (!SandboxFileAccess::directories(staging)) return std::unexpected{QString("Cannot create private archive staging")};
+        m_filename = staging + '/' + QUuid::createUuid().toString(QUuid::Id128) + ".zip";
+    }
+#endif
     if (m_filename.isEmpty()) {
         return std::unexpected{ "'m_filename' not set." };
     }
@@ -83,6 +98,9 @@ Result<> ArchiveWriter::open()
 Result<> ArchiveWriter::close()
 {
     QStringList errors;
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    const bool wasOpen = m_archive != nullptr;
+#endif
     if (m_archive) {
         if (archive_write_close(m_archive) != ARCHIVE_OK) {
             errors.append(QString("close: %1").arg(archive_error_string(m_archive)));
@@ -92,6 +110,14 @@ Result<> ArchiveWriter::close()
         }
         m_archive = nullptr;
     }
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    if (wasOpen && !m_sandboxTarget.isEmpty()) {
+        if (errors.isEmpty() && !SandboxFileAccess::copy(m_filename, m_sandboxTarget, true))
+            errors.append("Could not safely publish instance archive");
+        QFile::remove(m_filename);
+        m_sandboxTarget.clear();
+    }
+#endif
 
     if (errors.isEmpty()) {
         return {};
@@ -101,6 +127,13 @@ Result<> ArchiveWriter::close()
 
 Result<> ArchiveWriter::addFile(const QString& fileName, const QString& fileDest)
 {
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    if (SandboxFileAccess::instancePath(fileName)) {
+        auto content = FS::read(fileName);
+        if (!content) return std::unexpected{QString("Refusing linked or unreadable instance export input: %1").arg(fileName)};
+        return addFile(fileDest, *content);
+    }
+#endif
     QFileInfo fileInfo(fileName);
     if (!fileInfo.exists()) {
         return std::unexpected{ QString("File does not exist: %1").arg(fileInfo.filePath()) };

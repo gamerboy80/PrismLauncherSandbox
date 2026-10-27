@@ -49,6 +49,20 @@ LaunchCommand::LaunchCommand(LaunchTask* parent, QString command, QString phaseN
 
 void LaunchCommand::executeTask()
 {
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    auto command = m_parent->substituteVariables(m_command);
+    m_sandbox = std::make_unique<SandboxLaunchController>(this);
+    connect(m_sandbox.get(), &SandboxLaunchController::output, this, &LaunchCommand::logLines);
+    connect(m_sandbox.get(), &SandboxLaunchController::failed, this, &LaunchCommand::emitFailed);
+    connect(m_sandbox.get(), &SandboxLaunchController::ready, this, [this] { m_sandbox->proceed(); });
+    connect(m_sandbox.get(), &SandboxLaunchController::finished, this, [this](int code, int signal, bool stopped) {
+        if (stopped) emitAborted();
+        else if (code == 0 && signal == 0) emitSucceeded();
+        else emitFailed(tr("Sandbox command failed: code %1, signal %2.").arg(code).arg(signal));
+    });
+    m_sandbox->startCommand(m_parent->instance(), command, m_process.workingDirectory());
+    return;
+#endif
     auto args = m_parent->substituteVariables(m_command);
     emit logLine(tr("Running %1 command: %2").arg(m_phaseName, args.join(' ')), MessageLevel::Launcher);
     if (args.isEmpty()) {
@@ -98,6 +112,10 @@ void LaunchCommand::setWorkingDirectory(const QString& wd)
 
 bool LaunchCommand::abort()
 {
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    if (m_sandbox) m_sandbox->stop();
+    return true;
+#endif
     auto state = m_process.state();
     if (state == LoggedProcess::Running || state == LoggedProcess::Starting) {
         m_process.kill();

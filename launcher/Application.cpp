@@ -74,6 +74,9 @@
 #include "ui/setupwizard/PasteWizardPage.h"
 #include "ui/setupwizard/SetupWizard.h"
 #include "ui/setupwizard/ThemeWizardPage.h"
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+#include "macsandbox/manager/SandboxLaunchController.h"
+#endif
 
 #include "ui/dialogs/CustomMessageBox.h"
 
@@ -423,6 +426,20 @@ Application::Application(int& argc, char** argv) : QApplication(argc, argv)
 #endif
     }
 
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    // The manager remains unsandboxed, but never shares stock Prism's account/data root.
+    if (dirParam.isEmpty() && dataDirEnv.isEmpty())
+        dataPath = QDir::homePath() + "/Library/Application Support/PrismLauncherSandboxManager";
+    dataPath = QDir(dataPath).absoluteFilePath("manager");
+    {
+        QProcess validation;
+        validation.start("/usr/bin/python3", {"-I", "-S", SandboxLaunchController::backendPath(), "--root", QDir::cleanPath(QDir(dataPath).absoluteFilePath("..")), "validate-root"});
+        if (!validation.waitForFinished(15000) || validation.exitCode() != 0) {
+            showFatalErrorMessage("Unsafe sandbox manager data directory", QString::fromUtf8(validation.readAllStandardError()));
+            return;
+        }
+    }
+#endif
     if (!FS::ensureFolderPathExists(dataPath)) {
         showFatalErrorMessage(
             "The launcher data folder could not be created.",
@@ -447,6 +464,9 @@ Application::Application(int& argc, char** argv) : QApplication(argc, argv)
         return;
     }
     m_dataPath = dataPath;
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    setProperty("prismSandboxRoot", QDir::cleanPath(QDir(dataPath).absoluteFilePath("..")));
+#endif
 
     /*
      * Establish the mechanism for communication with an already running PrismLauncher that uses the same data path.
@@ -695,7 +715,11 @@ Application::Application(int& argc, char** argv) : QApplication(argc, argv)
         logModel->setOverflowMessage(tr("Cannot display this log since the log length surpassed %1 lines.").arg(logModel->getMaxLines()));
 
         // Folders
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+        m_settings->registerSetting("InstanceDir", "../instances");
+#else
         m_settings->registerSetting("InstanceDir", "instances");
+#endif
         m_settings->registerSetting("AdditionalInstanceDirs", QVariant(QStringList()));
         m_settings->registerSetting("LastUsedInstDirForNewInstance", "");
         m_settings->registerSetting({ "CentralModsDir", "ModsDir" }, "mods");
@@ -704,7 +728,11 @@ Application::Application(int& argc, char** argv) : QApplication(argc, argv)
         m_settings->registerSetting("DownloadsDirWatchRecursive", false);
         m_settings->registerSetting("MoveModsFromDownloadsDir", false);
         m_settings->registerSetting("SkinsDir", "skins");
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+        m_settings->registerSetting("JavaDir", "../cache/java");
+#else
         m_settings->registerSetting("JavaDir", "java");
+#endif
 
 #ifdef Q_OS_MACOS
         // Folder security-scoped bookmarks
@@ -1012,6 +1040,11 @@ Application::Application(int& argc, char** argv) : QApplication(argc, argv)
         qInfo() << "Loading Instances...";
         m_instances->loadList();
         qInfo() << "<> Instances loaded.";
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+        auto* cleanup = new QProcess(this);
+        connect(cleanup, &QProcess::finished, cleanup, &QObject::deleteLater);
+        cleanup->start("/usr/bin/python3", {"-I", "-S", SandboxLaunchController::backendPath(), "--root", SandboxLaunchController::managerRoot(), "gc", "--apply"});
+#endif
     }
 
     // and accounts
@@ -1266,6 +1299,9 @@ bool Application::createSetupWizard()
     bool validWidgets = m_themeManager->isValidApplicationTheme(settings()->get("ApplicationTheme").toString());
     bool validIcons = m_themeManager->isValidIconTheme(settings()->get("IconTheme").toString());
     bool login = !m_accounts->anyAccountIsValid() && (capabilities().testAnyFlags(Application::SupportsMSA));
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    login = false; // Standalone/offline clients do not require a Microsoft account at first setup.
+#endif
     bool themeInterventionRequired = !validWidgets || !validIcons;
     bool wizardRequired = javaRequired || languageRequired || pasteInterventionRequired || themeInterventionRequired || askjava || login;
     if (wizardRequired) {
@@ -1326,7 +1362,9 @@ bool Application::createSetupWizard()
 
 bool Application::updaterEnabled()
 {
-#if defined(Q_OS_MAC)
+#if defined(PRISM_MACOS_SANDBOX_MANAGER)
+    return false;
+#elif defined(Q_OS_MAC)
     return BuildConfig.UPDATER_ENABLED;
 #else
     return BuildConfig.UPDATER_ENABLED && QFileInfo(FS::PathCombine(m_rootPath, updaterBinaryName())).isFile();
@@ -1617,6 +1655,14 @@ bool Application::kill(BaseInstance* instance)
     if (controller) {
         return controller->abort();
     }
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    if (auto* minecraft = dynamic_cast<MinecraftInstance*>(instance)) {
+        QString error;
+        const bool stopped = SandboxLaunchController::stopExisting(minecraft, &error);
+        if (!stopped) qWarning() << error;
+        return stopped;
+    }
+#endif
     return true;
 }
 
@@ -1914,6 +1960,9 @@ void Application::detectLibraries()
 QString Application::getJarPath(const QString& jarFile)
 {
     QStringList potentialPaths = {
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+        FS::PathCombine(applicationDirPath(), "../Resources/jars"),
+#endif
 #if defined(Q_OS_LINUX) || defined(Q_OS_FREEBSD) || defined(Q_OS_OPENBSD)
         FS::PathCombine(m_rootPath, "share", BuildConfig.LAUNCHER_NAME),
 #endif

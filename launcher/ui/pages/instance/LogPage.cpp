@@ -51,6 +51,11 @@
 #include "ui/themes/ThemeManager.h"
 
 #include <BuildConfig.h>
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+#include "macsandbox/manager/SandboxLaunchController.h"
+#include "macsandbox/manager/SandboxFileAccess.h"
+#include <unistd.h>
+#endif
 
 QVariant LogFormatProxyModel::data(const QModelIndex& index, int role) const
 {
@@ -155,6 +160,27 @@ LogPage::LogPage(BaseInstance* instance, QWidget* parent) : QWidget(parent), ui(
         }
         connect(m_instance, &BaseInstance::launchTaskChanged, this, &LogPage::onInstanceLaunchTaskChanged);
     }
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    m_detachedTimer.setInterval(250);
+    connect(&m_detachedTimer, &QTimer::timeout, this, [this] {
+        if (!m_detachedLog || !m_model) return;
+        // The descriptor is anchored and no-follow; a replaced log cannot redirect this read.
+        const QByteArray bytes = m_detachedLog->read(65536);
+        m_detachedRemainder += m_detachedDecoder(bytes);
+        while (true) {
+            const auto end = m_detachedRemainder.indexOf('\n');
+            if (end < 0) break;
+            if (end <= 65536) m_model->append(MessageLevel::Unknown, m_detachedRemainder.left(end));
+            m_detachedRemainder.remove(0, end + 1);
+        }
+        if (m_detachedRemainder.size() > 65536) m_detachedRemainder.clear();
+        if (!m_instance->isRunning() && bytes.isEmpty()) m_detachedTimer.stop();
+    });
+    connect(m_instance, &BaseInstance::runningStatusChanged, this, [this](bool running) {
+        if (running && !m_instance->getLaunchTask()) reconnectSandboxLog();
+    });
+    if (!m_process) reconnectSandboxLog();
+#endif
 
     auto findShortcut = new QShortcut(QKeySequence(QKeySequence::Find), this);
     connect(findShortcut, &QShortcut::activated, this, &LogPage::findActivated);
@@ -205,6 +231,9 @@ void LogPage::UIToModelState()
 
 void LogPage::setInstanceLaunchTaskChanged(LaunchTask* proc, bool initial)
 {
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    m_detachedTimer.stop(); m_detachedLog.reset();
+#endif
     m_process = proc;
     if (m_process) {
         m_model = proc->getLogModel();
@@ -219,6 +248,27 @@ void LogPage::setInstanceLaunchTaskChanged(LaunchTask* proc, bool initial)
         m_model.reset();
     }
 }
+
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+void LogPage::reconnectSandboxLog() {
+    auto* minecraft = qobject_cast<MinecraftInstance*>(m_instance);
+    if (!minecraft || m_process || m_detachedLog) return;
+    const QString path = SandboxLaunchController::activeLogPath(minecraft);
+    if (path.isEmpty()) return;
+    const int descriptor = SandboxFileAccess::openRead(path);
+    if (descriptor < 0) return;
+    m_detachedLog = std::make_unique<QFile>();
+    if (!m_detachedLog->open(descriptor, QIODevice::ReadOnly, QFileDevice::AutoCloseHandle)) {
+        ::close(descriptor); m_detachedLog.reset(); return;
+    }
+    m_model = makeShared<LogModel>();
+    m_model->setMaxLines(m_instance->settings()->get("ConsoleMaxLines").toInt());
+    m_model->append(MessageLevel::Launcher, tr("Reconnected to the verified sandbox run's redacted console log."));
+    m_proxy->setSourceModel(m_model.get());
+    modelStateToUI();
+    m_detachedTimer.start();
+}
+#endif
 
 void LogPage::onInstanceLaunchTaskChanged(LaunchTask* proc)
 {

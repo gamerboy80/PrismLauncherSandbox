@@ -42,6 +42,10 @@
 #include "FileSystem.h"
 #include "launch/LaunchTask.h"
 #include "minecraft/MinecraftInstance.h"
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+#include "Commandline.h"
+#include <QDirIterator>
+#endif
 
 #if defined(Q_OS_LINUX) && defined(ENABLE_GAMEMODE)
 #include "gamemode_client.h"
@@ -91,7 +95,38 @@ void LauncherPartLaunch::executeTask()
         }
     }
 
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    m_launchScript = instance->settings()->get("SandboxStandalone").toBool() ? QString() : instance->createLaunchScript(m_session, m_targetToJoin);
+#else
     m_launchScript = instance->createLaunchScript(m_session, m_targetToJoin);
+#endif
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    const QString customMainClass = instance->settings()->get("SandboxMainClass").toString();
+    if (customMainClass.contains('\n') || customMainClass.contains('\r') || customMainClass.contains(QChar::Null)) {
+        emitFailed(tr("Custom main class cannot contain line breaks or NUL characters.")); return;
+    }
+    if (!customMainClass.isEmpty()) {
+        auto lines = m_launchScript.split('\n');
+        lines.removeIf([](const QString& line) { return line.startsWith("mainClass "); });
+        lines.prepend("mainClass " + instance->settings()->get("SandboxMainClass").toString());
+        m_launchScript = lines.join('\n');
+    }
+    if (instance->settings()->get("SandboxStandalone").toBool()) m_launchScript.clear();
+    else {
+        auto customArguments = Commandline::splitArgs(instance->settings()->get("SandboxClientArguments").toString());
+        for (auto argument : customArguments) {
+            if (m_session) {
+                argument.replace("${auth_access_token}", m_session->access_token);
+                argument.replace("${auth_player_name}", m_session->player_name);
+                argument.replace("${auth_uuid}", m_session->uuid);
+            }
+            if (argument.contains('\n') || argument.contains('\r') || argument.contains(QChar::Null)) {
+                emitFailed(tr("Minecraft client arguments cannot contain line breaks or NUL characters.")); return;
+            }
+            m_launchScript += "param " + argument + '\n';
+        }
+    }
+#endif
     QStringList args = instance->javaArguments();
     QString allArgs = args.join(" ");
     emit logLine("Java arguments:\n  " + m_parent->censorPrivateInfo(allArgs) + "\n", MessageLevel::Launcher);
@@ -104,6 +139,16 @@ void LauncherPartLaunch::executeTask()
     m_process.setDetachable(true);
 
     auto classPath = instance->getClassPath();
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    if (!instance->settings()->get("SandboxStandalone").toBool()) {
+        QDirIterator dependencies(QDir(instance->instanceRoot()).filePath("client/libraries"), {"*.jar"},
+                                  QDir::Files | QDir::NoSymLinks, QDirIterator::Subdirectories);
+        QStringList libraries;
+        while (dependencies.hasNext()) libraries << dependencies.next();
+        libraries.sort();
+        classPath << libraries;
+    }
+#endif
     classPath.prepend(jarPath);
 
     if (!legacyJarPath.isEmpty()) {
@@ -127,10 +172,68 @@ void LauncherPartLaunch::executeTask()
     args << classPath.join(':');
 #endif
     args << "org.prismlauncher.EntryPoint";
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    if (instance->settings()->get("SandboxStandalone").toBool()) {
+        args = instance->javaArguments();
+        const QString relativeJar = instance->settings()->get("SandboxClientJar").toString();
+        const QString clientJar = QDir(instance->instanceRoot()).absoluteFilePath(relativeJar);
+        if (relativeJar.startsWith('/') || relativeJar.split('/').contains("..") || !QFileInfo::exists(clientJar)) {
+            emitFailed(tr("Imported client JAR is missing or has an unsafe path.")); return;
+        }
+        const QString mainClass = instance->settings()->get("SandboxMainClass").toString();
+        classPath = {clientJar};
+        if (mainClass.isEmpty()) args << "-jar" << clientJar;
+        else {
+            QDirIterator dependencies(QDir(instance->instanceRoot()).filePath("client/libraries"), {"*.jar"},
+                                      QDir::Files | QDir::NoSymLinks, QDirIterator::Subdirectories);
+            QStringList libraries;
+            while (dependencies.hasNext()) libraries << dependencies.next();
+            libraries.sort();
+            classPath << libraries;
+            args << "-cp" << classPath.join(':') << mainClass;
+        }
+        auto clientArguments = Commandline::splitArgs(instance->settings()->get("SandboxClientArguments").toString());
+        if (m_session) for (auto& argument : clientArguments) {
+            argument.replace("${auth_access_token}", m_session->access_token);
+            argument.replace("${auth_player_name}", m_session->player_name);
+            argument.replace("${auth_uuid}", m_session->uuid);
+        }
+        args << clientArguments;
+    }
+#endif
 
-    qDebug() << args.join(' ');
+    qDebug() << m_parent->censorPrivateInfo(args.join(' '));
 
     QString wrapperCommandStr = instance->getWrapperCommand().trimmed();
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    m_sandbox = std::make_unique<SandboxLaunchController>(this);
+    if (!wrapperCommandStr.isEmpty()) m_sandbox->setWrapper(m_parent->substituteVariables(wrapperCommandStr));
+    if (m_session) m_sandbox->setPrivateValues({m_session->access_token, m_session->session});
+    connect(m_sandbox.get(), &SandboxLaunchController::output, this, &LauncherPartLaunch::logLines);
+    connect(m_sandbox.get(), &SandboxLaunchController::ready, this, [this] {
+        mayProceed = true;
+        emit readyForLaunch();
+    });
+    connect(m_sandbox.get(), &SandboxLaunchController::started, this, [this](qint64 pid) {
+        // This PID is used for display only. Stop is sent to the independently launched helper.
+        m_parent->setPid(pid);
+        emit logLine(tr("Sandboxed Minecraft process ID: %1").arg(pid), MessageLevel::Launcher);
+    });
+    connect(m_sandbox.get(), &SandboxLaunchController::failed, this, [this](const QString& reason) {
+        m_parent->setPid(-1);
+        m_parent->instance()->setMinecraftRunning(false);
+        emitFailed(reason);
+    });
+    connect(m_sandbox.get(), &SandboxLaunchController::finished, this, [this](int code, int signal, bool stopped) {
+        m_parent->setPid(-1);
+        m_parent->instance()->setMinecraftRunning(false);
+        if (signal) emit logLine(tr("Game ended with signal %1%2.").arg(signal).arg(stopped ? tr(" (requested stop)") : ""), MessageLevel::Launcher);
+        if (stopped || (code == 0 && signal == 0)) emitSucceeded();
+        else emitFailed(tr("Game exited with code %1, signal %2.").arg(code).arg(signal));
+    });
+    m_sandbox->start(instance, args, m_launchScript, classPath);
+    return;
+#endif
     if (!wrapperCommandStr.isEmpty()) {
         auto wrapperArgs = m_parent->substituteVariables(wrapperCommandStr);
         auto wrapperCommand = wrapperArgs.takeFirst();
@@ -216,6 +319,14 @@ void LauncherPartLaunch::setWorkingDirectory(const QString& wd)
 
 void LauncherPartLaunch::proceed()
 {
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    if (mayProceed && m_sandbox) {
+        m_parent->instance()->setMinecraftRunning(true);
+        m_sandbox->proceed();
+        mayProceed = false;
+    }
+    return;
+#endif
     if (mayProceed) {
         m_parent->instance()->setMinecraftRunning(true);
         QString launchString("launch\n");
@@ -226,6 +337,10 @@ void LauncherPartLaunch::proceed()
 
 bool LauncherPartLaunch::abort()
 {
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    if (m_sandbox) m_sandbox->stop();
+    return true;
+#endif
     if (mayProceed) {
         mayProceed = false;
         QString launchString("abort\n");

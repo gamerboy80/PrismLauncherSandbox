@@ -27,6 +27,9 @@ set(TEST_SOURCES
     XmlLogs_test.cpp
     Commandline_test.cpp
 )
+if(Launcher_MACOS_SANDBOX_MANAGER)
+    list(APPEND TEST_SOURCES SandboxFileAccess_test.cpp AccessibleInstanceView_test.cpp)
+endif()
 
 # NOTE(@getchoo): Very funny way of aliasing the Qt generated `main` test functions to respective filenames
 # This is required for any test file passed to `create_test_sourcelist()`

@@ -1,0 +1,134 @@
+{
+  "version": 1,
+  "createdViaWizard": true,
+  "automaticJavaDownload": true,
+  "networkDefault": "allowed",
+  "offlinePolicySelectedViaUI": true,
+  "nativeReviewDisplayed": true,
+  "cancelPerformedNoSigningOrPublication": true,
+  "instance": "24a50661d145425e805c2dc481bdf344",
+  "fingerprint": "0290022821ca166a3bd8ea3245f9890537d1318bfc3596fddda8ca48e51e9414",
+  "worldSaveReopen": {
+    "passed": true,
+    "verification": "User directly confirmed world saved and loaded correctly; world files inspected",
+    "world": "Sandbox Acceptance",
+    "levelDatExists": true,
+    "levelDatOldExists": true,
+    "regionFiles": 10
+  },
+  "standaloneImport": {
+    "instance": "dbb129862c5a436d9b0b65ed0c79e8c5",
+    "run": "6b885822-e14f-4531-97b4-a223991fe7ae",
+    "dependencyLoaded": true,
+    "graphicsInitialized": true,
+    "clientCompleted": true,
+    "exit": {
+      "stopped": false,
+      "generation": "dd5dd4790b0b22a221f66b2f",
+      "signal": 0,
+      "exitCode": 0,
+      "version": 1
+    }
+  },
+  "standaloneCopy": {
+    "instance": "bcc9a893df4349f693a6489f4bfc7e85",
+    "run": "76c875ba-cc4d-43ee-b8e1-86a5db532072",
+    "dependencyLoaded": true,
+    "graphicsInitialized": true,
+    "clientCompleted": true,
+    "exit": {
+      "stopped": false,
+      "generation": "abc080cb293abb43b9c958e4",
+      "signal": 0,
+      "exitCode": 0,
+      "version": 1
+    }
+  },
+  "moddedWorld": {
+    "profile": "Fabric 1.20.1 / loader 0.16.14",
+    "world": "Sandbox Acceptance Modded",
+    "userConfirmedSaveReopen": true,
+    "userConfirmedAudibleAudio": true,
+    "levelDatExists": true,
+    "levelDatOldExists": true,
+    "regionFiles": 4
+  },
+  "userRequestedSkips": {
+    "authenticatedLaunch": "Skipped at user request, not verified",
+    "multiplayerAllowedAndBlocked": "Skipped at user request, not verified"
+  },
+  "localModrinthImport": {
+    "instance": "b1fed6105ff3485893dc8815976d0422",
+    "minecraft": "1.20.1",
+    "fabricLoader": "0.16.14",
+    "overridePreserved": true,
+    "automaticJavaDownload": true,
+    "approvalFingerprint": "b918a040b8f6de1944ffb2d8f05bc0bbee0f26b0fc1a08f69d8caef44b0d59b8",
+    "graphicsAndAudioInitialized": true,
+    "stoppedNormally": true
+  },
+  "remoteModrinthImport": {
+    "instance": "554ef401049f4a6284219008b7a727c9",
+    "project": "1KVo5zza",
+    "version": "LpdvzsNf",
+    "name": "Fabulously Optimized 5.2.8 for 1.20.1",
+    "downloadedThroughCatalog": true,
+    "initialLaunchDiagnostic": "Controlify 1.6.0+1.20 embeds hid4java 0.7.0 with Intel-only Mach-O; ARM preparation rejected before signing",
+    "optionalModDisabledThroughUI": "Controlify-1.6.0+1.20.jar",
+    "adjustedPackGraphicsAndAudioInitialized": true,
+    "userConfirmedTitleScreen": true,
+    "userConfirmedNoDylibPopup": true,
+    "generation": "9cbb5cdf644acb0989e8ccf3",
+    "nativeMismatchDiagnosticVisibleInFinalConsole": true,
+    "controlifyRestoredDisabledAfterDiagnosticCheck": true
+  },
+  "replacementImport": {
+    "instance": "a38ea38fb86d4de4834ed6fc0465aee6",
+    "minecraft": "1.20.1",
+    "createdThroughWizard": true,
+    "originalSHA256": "56b71336d2b4fdffd197f56595b0da93e32a946f78f382a299b8f4b92758bb0f",
+    "importedSHA256": "56b71336d2b4fdffd197f56595b0da93e32a946f78f382a299b8f4b92758bb0f",
+    "userConfirmedTitleScreen": true,
+    "userConfirmedNoDylibPopup": true,
+    "graphicsAndAudioInitialized": true
+  },
+  "finalCopyAndBlockedLaunch": {
+    "instance": "27813f2af1cd453290b5af68850bc506",
+    "freshIdentity": true,
+    "noCopiedControlDirectoryBeforeLaunch": true,
+    "hardAndSymbolicLinkOptionsDisabled": true,
+    "networkSelectedThroughUI": "blocked",
+    "signedEntitlements": {
+      "com.apple.security.app-sandbox": true,
+      "com.apple.security.temporary-exception.files.absolute-path.read-write": [
+        "/private/tmp/prism-manager-acceptance-lo1qz4na/instances/27813f2af1cd453290b5af68850bc506/"
+      ]
+    },
+    "generation": "588c2b69d9de5139d4aaa4b1",
+    "run": "32049dc7-6365-4244-908d-e207d09ffa5b",
+    "exit": {
+      "stopped": false,
+      "generation": "588c2b69d9de5139d4aaa4b1",
+      "signal": 0,
+      "exitCode": 0,
+      "version": 1
+    },
+    "exitedStatusDisplayed": true,
+    "policyControlsReenabledAfterExit": true
+  },
+  "accessibilityRegression": {
+    "nativeQtChecksPassed": 3,
+    "ctestChecksPassed": 25,
+    "pythonBackendChecksPassed": 28,
+    "noNewManagerCrashReportsAfterFix": true
+  },
+  "finalPackage": {
+    "path": "/Users/patrickliang/Documents/development/PRISMPRISM/PrismLauncher.app",
+    "signatureVerified": true,
+    "qtRepairIncluded": true,
+    "upstreamUpdateButtonHidden": true,
+    "normalUIUsable": true
+  },
+  "outcome": "Completed with user-requested skips and documented unsupported optional native artifact",
+  "completedOn": "2026-10-27"
+}

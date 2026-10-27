@@ -36,6 +36,9 @@
  */
 
 #include "FileSystem.h"
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+#include "macsandbox/manager/SandboxFileAccess.h"
+#endif
 #include <qcontainerfwd.h>
 #include <QPair>
 
@@ -271,8 +274,24 @@ QString quoteDesktopExecArgs(const QStringList& args)
 }  // namespace
 namespace FS {
 
+bool copyFile(const QString& source, const QString& destination, bool overwrite)
+{
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    if (SandboxFileAccess::instancePath(source) || SandboxFileAccess::instancePath(destination))
+        return SandboxFileAccess::copy(source, destination, overwrite);
+#endif
+    if (overwrite && QFileInfo::exists(destination) && !QFile::remove(destination)) return false;
+    return QFile::copy(source, destination);
+}
+
 Result<> write(const QString& filename, const QByteArray& data)
 {
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    if (SandboxFileAccess::instancePath(filename)) {
+        if (SandboxFileAccess::write(filename, data)) return {};
+        return std::unexpected("Safe instance write failed: " + filename);
+    }
+#endif
     auto res = ensureExists(QFileInfo(filename).dir());
     if (!res) {
         return res;
@@ -292,6 +311,12 @@ Result<> write(const QString& filename, const QByteArray& data)
 
 Result<> appendSafe(const QString& filename, const QByteArray& data)
 {
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    if (SandboxFileAccess::instancePath(filename)) {
+        if (SandboxFileAccess::write(filename, data, true)) return {};
+        return std::unexpected("Safe instance append failed: " + filename);
+    }
+#endif
     auto res = ensureExists(QFileInfo(filename).dir());
     if (!res) {
         return res;
@@ -318,6 +343,9 @@ Result<> appendSafe(const QString& filename, const QByteArray& data)
 
 Result<> append(const QString& filename, const QByteArray& data)
 {
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    if (SandboxFileAccess::instancePath(filename)) return appendSafe(filename, data);
+#endif
     auto res = ensureExists(QFileInfo(filename).dir());
     if (!res) {
         return res;
@@ -334,6 +362,13 @@ Result<> append(const QString& filename, const QByteArray& data)
 
 Result<QByteArray> read(const QString& filename)
 {
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    if (SandboxFileAccess::instancePath(filename)) {
+        auto bytes = SandboxFileAccess::read(filename);
+        if (bytes) return *bytes;
+        return std::unexpected("Safe instance read failed: " + filename);
+    }
+#endif
     QFile file(filename);
     if (!file.open(QFile::ReadOnly)) {
         return std::unexpected("Unable to open " + filename + " for reading: " + file.errorString());
@@ -360,6 +395,9 @@ bool updateTimestamp(const QString& filename)
 
 bool ensureFilePathExists(const QString& filenamepath)
 {
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    if (SandboxFileAccess::instancePath(filenamepath)) return SandboxFileAccess::directories(QFileInfo(filenamepath).absolutePath());
+#endif
     QFileInfo a(filenamepath);
     QDir dir;
     QString ensuredPath = a.path();
@@ -370,6 +408,9 @@ bool ensureFilePathExists(const QString& filenamepath)
 namespace {
 bool ensureFolderPathExistsImpl(const QFileInfo& folderPath)
 {
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    if (SandboxFileAccess::instancePath(folderPath.filePath())) return SandboxFileAccess::directories(folderPath.filePath());
+#endif
     QDir dir;
     QString ensuredPath = folderPath.filePath();
     if (folderPath.exists()) {
@@ -462,6 +503,11 @@ bool copy::operator()(const QString& offset, bool dryRun)
             skip = fs::is_directory(srcStdPath) || fs::is_symlink(srcStdPath);
 #endif
             if (!skip) {
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+                if (SandboxFileAccess::instancePath(srcPath) || SandboxFileAccess::instancePath(dstPath)) {
+                    if (!SandboxFileAccess::copy(srcPath, dstPath, m_overwrite)) err = std::make_error_code(std::errc::permission_denied);
+                } else
+#endif
                 fs::copy(StringUtils::toStdString(srcPath), StringUtils::toStdString(dstPath), opt, err);
             }
         }
@@ -817,6 +863,10 @@ void ExternalLinkFileProcess::runLinkFile()
 
 bool move(const QString& source, const QString& dest)
 {
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    if (SandboxFileAccess::instancePath(source) || SandboxFileAccess::instancePath(dest))
+        return SandboxFileAccess::rename(source, dest) || moveByCopy(source, dest);
+#endif
     std::error_code err;
 
     ensureFilePathExists(dest);
@@ -835,6 +885,9 @@ bool move(const QString& source, const QString& dest)
 
 bool deletePath(QString path)
 {
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    if (SandboxFileAccess::instancePath(path)) return SandboxFileAccess::remove(path);
+#endif
     std::error_code err;
 
     fs::remove_all(StringUtils::toStdString(std::move(path)), err);
@@ -848,6 +901,9 @@ bool deletePath(QString path)
 
 bool deleteContents(const QString& path)
 {
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    if (SandboxFileAccess::instancePath(path)) return SandboxFileAccess::remove(path, true);
+#endif
     const QFileInfo info(path);
     if (!info.exists()) {
         return true;
@@ -874,6 +930,9 @@ bool deleteContents(const QString& path)
 
 bool trash(const QString& path, QString* pathInTrash)
 {
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    if (SandboxFileAccess::instancePath(path)) return SandboxFileAccess::trash(path, pathInTrash);
+#endif
 #ifdef Q_OS_LINUX
     if (DesktopServices::isFlatpak()) {
 #if defined(WITH_QTDBUS)
@@ -1505,6 +1564,13 @@ bool clone::operator()(const QString& offset, bool dryRun)
  */
 bool clone_file(const QString& src, const QString& dst, std::error_code& ec)
 {
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    if (SandboxFileAccess::instancePath(src) || SandboxFileAccess::instancePath(dst)) {
+        const bool ok = SandboxFileAccess::copy(src, dst, false);
+        if (!ok) ec = std::make_error_code(std::errc::permission_denied);
+        return ok;
+    }
+#endif
     auto srcPath = StringUtils::toStdString(QDir::toNativeSeparators(QFileInfo(src).absoluteFilePath()));
     auto dstPath = StringUtils::toStdString(QDir::toNativeSeparators(QFileInfo(dst).absoluteFilePath()));
 
@@ -1902,6 +1968,10 @@ bool removeFiles(const QStringList& listFile)
     // For each file
     for (int i = 0; i < listFile.count(); i++) {
         // Remove
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+        if (SandboxFileAccess::instancePath(listFile.at(i))) ret = ret && SandboxFileAccess::remove(listFile.at(i));
+        else
+#endif
         ret = ret && QFile::remove(listFile.at(i));
     }
     return ret;

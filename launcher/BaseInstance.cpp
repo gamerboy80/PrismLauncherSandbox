@@ -318,6 +318,18 @@ void BaseInstance::setMinecraftRunning(bool running)
     }
 }
 
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+void BaseInstance::resumeMinecraftRunning(qint64 startMilliseconds)
+{
+    setMinecraftRunning(true);
+    const qint64 now = QDateTime::currentMSecsSinceEpoch();
+    if (startMilliseconds > 0 && startMilliseconds <= now) {
+        m_timeStarted = QDateTime::fromMSecsSinceEpoch(startMilliseconds);
+        setLastLaunch(startMilliseconds);
+    }
+}
+#endif
+
 int64_t BaseInstance::totalTimePlayed() const
 {
     qint64 current = m_settings->get("totalTimePlayed").toLongLong();
@@ -419,6 +431,10 @@ void BaseInstance::setName(const QString& val)
 
 bool BaseInstance::syncInstanceDirName(const QString& newRoot) const
 {
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    // A display-name change must not move the signed instance boundary or change its identity.
+    return newRoot == instanceRoot();
+#endif
     auto oldRoot = instanceRoot();
     return oldRoot == newRoot || QFile::rename(oldRoot, newRoot);
 }

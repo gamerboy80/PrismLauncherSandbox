@@ -20,6 +20,11 @@
 #include <QFileInfo>
 #include <QSaveFile>
 #include "Application.h"
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+#include "macsandbox/manager/SandboxFileAccess.h"
+#include <QDir>
+#include <QUuid>
+#endif
 
 #if defined(LAUNCHER_APPLICATION)
 
@@ -51,20 +56,58 @@ class PSaveFile : public QSaveFile {
     PSaveFile(const QString& name, QObject* parent) : QSaveFile(name, parent) { addPath(name); }
     virtual ~PSaveFile()
     {
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+        if (!m_privateCopy.isEmpty()) QFile::remove(m_privateCopy);
+#endif
         if (auto app = APPLICATION_DYN) {
             app->removeQSavePath(m_absoluteFilePath);
         }
     }
 
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    bool open(OpenMode mode) override
+    {
+        if (m_pathError) { setErrorString("Cannot create private download staging directory"); return false; }
+        return QSaveFile::open(mode);
+    }
+
+    bool commit()
+    {
+        if (!QSaveFile::commit()) return false;
+        if (m_sandboxTarget.isEmpty()) return true;
+        if (!SandboxFileAccess::copy(m_privateCopy, m_sandboxTarget, true)) {
+            setErrorString("Could not safely publish download into the instance");
+            return false;
+        }
+        QFile::remove(m_privateCopy);
+        m_privateCopy.clear();
+        return true;
+    }
+#endif
+
    private:
     void addPath(const QString& path)
     {
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+        if (SandboxFileAccess::instancePath(path)) {
+            m_sandboxTarget = path;
+            const QString root = QCoreApplication::instance()->property("prismSandboxRoot").toString();
+            const QString staging = root + "/manager/download-staging";
+            m_pathError = !QDir().mkpath(staging);
+            m_privateCopy = staging + "/" + QUuid::createUuid().toString(QUuid::Id128);
+            QSaveFile::setFileName(m_privateCopy);
+        }
+#endif
         m_absoluteFilePath = QFileInfo(path).absoluteFilePath() + ".";  // add dot for tmp files only
         if (auto app = APPLICATION_DYN) {
             app->addQSavePath(m_absoluteFilePath);
         }
     }
     QString m_absoluteFilePath;
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    QString m_sandboxTarget, m_privateCopy;
+    bool m_pathError = false;
+#endif
 };
 #else
 using PSaveFile = QSaveFile;

@@ -36,6 +36,9 @@
 #include <iostream>
 
 #include "Application.h"
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+#include "macsandbox/manager/SandboxStartup.h"
+#endif
 
 #if defined Q_OS_WIN32
 #include "console/WindowsConsole.h"
@@ -46,6 +49,15 @@ int main(int argc, char* argv[])
 #if defined Q_OS_WIN32
     // used on Windows to attach the standard IO streams
     console::WindowsConsoleGuard _consoleGuard;
+#endif
+
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    QStringList arguments;
+    for (int i = 1; i < argc; ++i) arguments << QString::fromLocal8Bit(argv[i]);
+    if (!prepareSandboxManagerStartup(arguments)) {
+        std::cerr << "Qt plugin and platform overrides are disabled in the sandbox manager.\n";
+        return 1;
+    }
 #endif
 
     // initialize Qt

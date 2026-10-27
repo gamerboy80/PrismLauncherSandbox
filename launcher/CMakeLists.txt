@@ -1225,7 +1225,30 @@ endif()
 ####### Targets ########
 
 # Add executable
+if(Launcher_MACOS_SANDBOX_MANAGER)
+    set_source_files_properties(macsandbox/manager/SandboxLaunchController.mm PROPERTIES COMPILE_OPTIONS "-fobjc-arc")
+    list(APPEND LAUNCHER_SOURCES
+        macsandbox/manager/SandboxLaunchController.h
+        macsandbox/manager/SandboxLaunchController.mm
+        macsandbox/manager/SandboxPages.h
+        macsandbox/manager/SandboxPages.cpp
+        macsandbox/manager/SandboxFileAccess.h
+        macsandbox/manager/SandboxFileAccess.cpp
+    )
+    add_executable(PrismGameHost macsandbox/manager/PrismGameHost.mm)
+    set_target_properties(PrismGameHost PROPERTIES
+        OSX_ARCHITECTURES "arm64;x86_64" AUTOMOC OFF AUTOUIC OFF AUTORCC OFF)
+    target_compile_options(PrismGameHost PRIVATE -fobjc-arc -Wno-deprecated-declarations)
+    target_link_libraries(PrismGameHost PRIVATE "-framework AppKit" "-framework Foundation" "-framework Security")
+    install(TARGETS PrismGameHost RUNTIME DESTINATION "${RESOURCES_DEST_DIR}/sandbox")
+    install(FILES "${CMAKE_SOURCE_DIR}/scripts/macos-sandbox/manager.py" DESTINATION "${RESOURCES_DEST_DIR}/sandbox")
+endif()
 add_library(Launcher_logic STATIC ${LOGIC_SOURCES} ${LAUNCHER_SOURCES} ${LAUNCHER_RESOURCES})
+if(Launcher_MACOS_SANDBOX_MANAGER)
+    target_compile_definitions(Launcher_logic PRIVATE
+        PRISM_SANDBOX_SOURCE_BACKEND="${CMAKE_SOURCE_DIR}/scripts/macos-sandbox/manager.py"
+        PRISM_SANDBOX_BUILD_HOST="${CMAKE_BINARY_DIR}/PrismGameHost")
+endif()
 target_include_directories(Launcher_logic PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_compile_definitions(Launcher_logic PUBLIC LAUNCHER_APPLICATION)
 
@@ -1311,6 +1334,9 @@ if(APPLE)
 endif()
 
 add_executable(${Launcher_Name} MACOSX_BUNDLE WIN32 main.cpp ${LAUNCHER_RCS})
+if(Launcher_MACOS_SANDBOX_MANAGER)
+    add_dependencies(${Launcher_Name} PrismGameHost)
+endif()
 target_link_options(${Launcher_Name} PRIVATE
     # /MANIFEST:NO disables generating a manifest file, we instead provide our own
     $<$<STREQUAL:${CMAKE_CXX_COMPILER_FRONTEND_VARIANT},MSVC>:/MANIFEST:NO>

@@ -39,6 +39,15 @@
 #include "FileSystem.h"
 
 #include "net/Logging.h"
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+#include "Application.h"
+#include "ChecksumValidator.h"
+#include <QJsonDocument>
+#include <QJsonArray>
+#include <QJsonObject>
+#include <QSaveFile>
+#include <QUrl>
+#endif
 
 namespace Net {
 
@@ -56,6 +65,9 @@ auto FileSink::init(QNetworkRequest& request) -> InitResult
     }
 
     m_wroteAnyData = false;
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    m_originHash.reset(); m_originSize = 0;
+#endif
     m_outputFile.reset(new PSaveFile(m_filename));
     if (!m_outputFile->open(QIODevice::WriteOnly)) {
         const auto error = QString("Could not open %1 for writing: %2").arg(m_filename).arg(m_outputFile->errorString());
@@ -69,6 +81,9 @@ auto FileSink::init(QNetworkRequest& request) -> InitResult
 
 auto FileSink::write(const QByteArray& data) -> Result<>
 {
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    m_originHash.addData(data); m_originSize += data.size();
+#endif
     writeAllValidators(data);
     if (m_outputFile->write(data) != data.size()) {
         QString error = QString("Failed writing into %1: %2").arg(m_filename);
@@ -124,6 +139,31 @@ auto FileSink::finalize(QNetworkReply& reply) -> Result<>
             m_outputFile->cancelWriting();
             return std::unexpected(error);
         }
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+        const QString root = QCoreApplication::instance()->property("prismSandboxRoot").toString();
+        if (!root.isEmpty()) {
+            const QString sha256 = QString::fromLatin1(m_originHash.result().toHex());
+            const QString folder = root + "/manager/artifact-origins";
+            QUrl source = reply.url();
+            const bool queryOmitted = source.hasQuery();
+            source.setUserInfo({}); source.setQuery({}); source.setFragment({});
+            QJsonArray checksums;
+            for (const auto& validator : m_validators) {
+                auto checksum = std::dynamic_pointer_cast<ChecksumValidator>(validator);
+                if (checksum && !checksum->expected().isEmpty()) checksums.append(QJsonObject{
+                    {"algorithm", static_cast<int>(checksum->algorithm())}, {"expected", QString::fromLatin1(checksum->expected().toHex())}});
+            }
+            if (QDir().mkpath(folder)) {
+                QSaveFile provenance(folder + '/' + sha256 + ".json");
+                if (provenance.open(QIODevice::WriteOnly)) {
+                    provenance.setPermissions(QFile::ReadOwner | QFile::WriteOwner);
+                    provenance.write(QJsonDocument(QJsonObject{{"version", 1}, {"sourceType", "download"}, {"sourceUrl", source.toString()},
+                        {"queryOmitted", queryOmitted}, {"sha256", sha256}, {"size", m_originSize}, {"upstreamChecksums", checksums}}).toJson(QJsonDocument::Compact));
+                    if (!provenance.commit()) qCWarning(taskNetLogC) << "Could not persist artifact provenance";
+                }
+            }
+        }
+#endif
     }
 
     // then get rid of the save file

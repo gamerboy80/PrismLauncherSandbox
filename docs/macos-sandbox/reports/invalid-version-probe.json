@@ -1,0 +1,5 @@
+{
+  "version": 1,
+  "passed": true,
+  "error": "{'message': 'Unsupported launch description schema.', 'code': 'UNSUPPORTED_DESCRIPTOR_VERSION'}"
+}

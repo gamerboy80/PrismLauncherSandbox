@@ -1,0 +1,935 @@
+{
+  "version": 1,
+  "approvalFingerprint": "0290022821ca166a3bd8ea3245f9890537d1318bfc3596fddda8ca48e51e9414",
+  "review": {
+    "adapterVersion": 1,
+    "adapters": [
+      {
+        "artifactHash": "b3a9408e7c51e08ef0e3bfcc08f443f6ec0f6191ba8cd7c18d53d2b22e5bdbc0",
+        "id": "jna-nounpack-v1"
+      },
+      {
+        "artifactHash": "0cf1eac3c360395846320ec47a5e0da313fbb5ee92414ce09ba7e7cc11274509",
+        "id": "lwjgl-library-path-v1"
+      },
+      {
+        "artifactHash": "13aafa148f6f2d81403f1eb0635691443a5f463db7c5655d65c83cbdadd6268d",
+        "id": "lwjgl-library-path-v1"
+      },
+      {
+        "artifactHash": "1c338a23271d92e7884af03c06ac57decb1494a35798249f46b98b299416db3d",
+        "id": "lwjgl-library-path-v1"
+      },
+      {
+        "artifactHash": "254162ef94bd213663a417368902ea916d51e0e0fa3054d07ea0ce9a8b7ac9e6",
+        "id": "lwjgl-library-path-v1"
+      },
+      {
+        "artifactHash": "41d6295f9b0719709a2676bcd34efd811f0255dc549740852b6cdc1f44a5cb69",
+        "id": "lwjgl-library-path-v1"
+      },
+      {
+        "artifactHash": "46eeca5471833c3cf5da3c1da015b41e3bb3eb16dd3da03f366886da10096751",
+        "id": "lwjgl-library-path-v1"
+      },
+      {
+        "artifactHash": "4a0049c8554d6890718fee76507572f2f9f8f3f6144d25d7d2ea76bccc2d9605",
+        "id": "lwjgl-library-path-v1"
+      },
+      {
+        "artifactHash": "4daf551da197dd5739dc09f2c2f6158b083de3dfc43e769d99cdb68d586f864b",
+        "id": "lwjgl-library-path-v1"
+      },
+      {
+        "artifactHash": "544753f5e49c53580949b9f1fc341f0e434991303c93d5a428fbaafaacc2cd69",
+        "id": "lwjgl-library-path-v1"
+      },
+      {
+        "artifactHash": "5b82039f6f32a0f7b1229dcd132561b4f8aa3c37fe0b37fc2d7ebd3330d9d9af",
+        "id": "lwjgl-library-path-v1"
+      },
+      {
+        "artifactHash": "82c7b5270d2c78458f5720c639459710c8f086ca050eea9ab0c44256fee7a626",
+        "id": "lwjgl-library-path-v1"
+      },
+      {
+        "artifactHash": "88c822e641d78face58b4e8ec53ddced4463f35eb5420e7d754e8cd9daf2beb3",
+        "id": "lwjgl-library-path-v1"
+      },
+      {
+        "artifactHash": "95cd48b0349f5b51d25304995a4ef5bb63f31972524cc4c05ad2206beec14777",
+        "id": "lwjgl-library-path-v1"
+      },
+      {
+        "artifactHash": "a92cf30f25b6fb6066f3508511f83c5c4fe2a0cff14fc2e7373bc1f6c726374f",
+        "id": "lwjgl-library-path-v1"
+      },
+      {
+        "artifactHash": "acdb40767775ed1223dc3b2a8c9d3ce740c9e3c4af074444ce2dfe2ea9ba62e0",
+        "id": "lwjgl-library-path-v1"
+      },
+      {
+        "artifactHash": "b331b9d2a29c1b330c3887d33c14dab9d7eed3f763bb8f5ca559eec02d73f075",
+        "id": "lwjgl-library-path-v1"
+      },
+      {
+        "artifactHash": "b73c636a4063707ea51340d7c96f5e6fee8043c4464c02e4c8dd51ea59b2585b",
+        "id": "lwjgl-library-path-v1"
+      },
+      {
+        "artifactHash": "be5bffa9e704a8a93babd65efadd20bfa5a731c7379524517fcbd35b18d8ee59",
+        "id": "lwjgl-library-path-v1"
+      },
+      {
+        "artifactHash": "bf54b5da015b512901ff673e1693f07f2d073a7c58da3902d339e0c67e87c170",
+        "id": "lwjgl-library-path-v1"
+      },
+      {
+        "artifactHash": "c038b8f586214fe762eb0876890103ffc77869c96c94572f13b1428b384df034",
+        "id": "lwjgl-library-path-v1"
+      },
+      {
+        "artifactHash": "d737eba8512caa2f53db7a8dbea4c08d9c3d94493bb0a244e6d64af95541f742",
+        "id": "lwjgl-library-path-v1"
+      },
+      {
+        "artifactHash": "dcb33abcbd946553176bb668be80d7adc60cb9d919ab5c71fb01fc51cacc4c8f",
+        "id": "lwjgl-library-path-v1"
+      },
+      {
+        "artifactHash": "e72b613dd7fa43410469ae10833f386feb1a5d203694ac1e4b8c64f482938b8d",
+        "id": "lwjgl-library-path-v1"
+      },
+      {
+        "artifactHash": "f34062b6489454f7e2c3bf5979e37667e62c7c85cd00f73760f441557cb1978a",
+        "id": "lwjgl-library-path-v1"
+      },
+      {
+        "artifactHash": "a58a84c4271e50df4c96ed916ccb7e48a869f8ed9cdcda1ad5d3d4c33b0214a3",
+        "id": "lz4-java-library-path-1.10.1-v1"
+      },
+      {
+        "artifactHash": "77e34a13bccffc6c8b1a0e3ed46ddb0ea7dd56f2104ecdfacaaec9e4054ac332",
+        "id": "weblite-1.1"
+      }
+    ],
+    "architecture": "arm64",
+    "artifacts": [
+      {
+        "sha256": "a58a84c4271e50df4c96ed916ccb7e48a869f8ed9cdcda1ad5d3d4c33b0214a3",
+        "source": "/private/tmp/prism-manager-acceptance-lo1qz4na/manager/libraries/at/yawk/lz4/lz4-java/1.10.1/lz4-java-1.10.1.jar"
+      },
+      {
+        "sha256": "77e34a13bccffc6c8b1a0e3ed46ddb0ea7dd56f2104ecdfacaaec9e4054ac332",
+        "source": "/private/tmp/prism-manager-acceptance-lo1qz4na/manager/libraries/ca/weblite/java-objc-bridge/1.1/java-objc-bridge-1.1.jar"
+      },
+      {
+        "sha256": "7d76dfae02c0c9326b04601959bf9b98b69ef80c35b5f8487f0daf893a448d34",
+        "source": "/private/tmp/prism-manager-acceptance-lo1qz4na/manager/libraries/com/mojang/jtracy-natives-macos-arm64/1.14.38/jtracy-natives-macos-arm64-1.14.38.jar"
+      },
+      {
+        "sha256": "b3a9408e7c51e08ef0e3bfcc08f443f6ec0f6191ba8cd7c18d53d2b22e5bdbc0",
+        "source": "/private/tmp/prism-manager-acceptance-lo1qz4na/manager/libraries/net/java/dev/jna/jna/5.17.0/jna-5.17.0.jar"
+      },
+      {
+        "sha256": "be5bffa9e704a8a93babd65efadd20bfa5a731c7379524517fcbd35b18d8ee59",
+        "source": "/private/tmp/prism-manager-acceptance-lo1qz4na/manager/libraries/org/lwjgl/lwjgl-freetype-natives-macos-arm64/3.4.3/lwjgl-freetype-natives-macos-arm64-3.4.3.jar"
+      },
+      {
+        "sha256": "5b82039f6f32a0f7b1229dcd132561b4f8aa3c37fe0b37fc2d7ebd3330d9d9af",
+        "source": "/private/tmp/prism-manager-acceptance-lo1qz4na/manager/libraries/org/lwjgl/lwjgl-jemalloc-natives-macos-arm64/3.4.3/lwjgl-jemalloc-natives-macos-arm64-3.4.3.jar"
+      },
+      {
+        "sha256": "0cf1eac3c360395846320ec47a5e0da313fbb5ee92414ce09ba7e7cc11274509",
+        "source": "/private/tmp/prism-manager-acceptance-lo1qz4na/manager/libraries/org/lwjgl/lwjgl-natives-macos-arm64/3.4.3/lwjgl-natives-macos-arm64-3.4.3.jar"
+      },
+      {
+        "sha256": "95cd48b0349f5b51d25304995a4ef5bb63f31972524cc4c05ad2206beec14777",
+        "source": "/private/tmp/prism-manager-acceptance-lo1qz4na/manager/libraries/org/lwjgl/lwjgl-openal-natives-macos-arm64/3.4.3/lwjgl-openal-natives-macos-arm64-3.4.3.jar"
+      },
+      {
+        "sha256": "13aafa148f6f2d81403f1eb0635691443a5f463db7c5655d65c83cbdadd6268d",
+        "source": "/private/tmp/prism-manager-acceptance-lo1qz4na/manager/libraries/org/lwjgl/lwjgl-opengl-natives-macos-arm64/3.4.3/lwjgl-opengl-natives-macos-arm64-3.4.3.jar"
+      },
+      {
+        "sha256": "1c338a23271d92e7884af03c06ac57decb1494a35798249f46b98b299416db3d",
+        "source": "/private/tmp/prism-manager-acceptance-lo1qz4na/manager/libraries/org/lwjgl/lwjgl-sdl-natives-macos-arm64/3.4.3/lwjgl-sdl-natives-macos-arm64-3.4.3.jar"
+      },
+      {
+        "sha256": "e72b613dd7fa43410469ae10833f386feb1a5d203694ac1e4b8c64f482938b8d",
+        "source": "/private/tmp/prism-manager-acceptance-lo1qz4na/manager/libraries/org/lwjgl/lwjgl-shaderc-natives-macos-arm64/3.4.3/lwjgl-shaderc-natives-macos-arm64-3.4.3.jar"
+      },
+      {
+        "sha256": "bf54b5da015b512901ff673e1693f07f2d073a7c58da3902d339e0c67e87c170",
+        "source": "/private/tmp/prism-manager-acceptance-lo1qz4na/manager/libraries/org/lwjgl/lwjgl-spng-natives-macos-arm64/3.4.3/lwjgl-spng-natives-macos-arm64-3.4.3.jar"
+      },
+      {
+        "sha256": "b73c636a4063707ea51340d7c96f5e6fee8043c4464c02e4c8dd51ea59b2585b",
+        "source": "/private/tmp/prism-manager-acceptance-lo1qz4na/manager/libraries/org/lwjgl/lwjgl-spvc-natives-macos-arm64/3.4.3/lwjgl-spvc-natives-macos-arm64-3.4.3.jar"
+      },
+      {
+        "sha256": "c038b8f586214fe762eb0876890103ffc77869c96c94572f13b1428b384df034",
+        "source": "/private/tmp/prism-manager-acceptance-lo1qz4na/manager/libraries/org/lwjgl/lwjgl-stb-natives-macos-arm64/3.4.3/lwjgl-stb-natives-macos-arm64-3.4.3.jar"
+      },
+      {
+        "sha256": "88c822e641d78face58b4e8ec53ddced4463f35eb5420e7d754e8cd9daf2beb3",
+        "source": "/private/tmp/prism-manager-acceptance-lo1qz4na/manager/libraries/org/lwjgl/lwjgl-vma-natives-macos-arm64/3.4.3/lwjgl-vma-natives-macos-arm64-3.4.3.jar"
+      },
+      {
+        "sha256": "4daf551da197dd5739dc09f2c2f6158b083de3dfc43e769d99cdb68d586f864b",
+        "source": "/private/tmp/prism-manager-acceptance-lo1qz4na/manager/libraries/org/lwjgl/lwjgl-vulkan-natives-macos-arm64/3.4.3/lwjgl-vulkan-natives-macos-arm64-3.4.3.jar"
+      }
+    ],
+    "nativeFiles": [
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "entry": "net/jpountz/util/darwin/aarch64/liblz4-java.dylib",
+        "name": "liblz4-java.dylib",
+        "sha256": "0c103016659c4270fe7446915a79c727193eb9d1077d70e0391578fe42e79a7a",
+        "size": 190816,
+        "source": "/private/tmp/prism-manager-acceptance-lo1qz4na/manager/libraries/at/yawk/lz4/lz4-java/1.10.1/lz4-java-1.10.1.jar"
+      },
+      {
+        "architectures": [
+          "arm64",
+          "x86_64"
+        ],
+        "entry": "libjcocoa.dylib",
+        "name": "libjcocoa.dylib",
+        "sha256": "c2b44531ca52f57b5d142306cfbcb01585cdd4250b9d5935ef94615b98911c5a",
+        "size": 159536,
+        "source": "/private/tmp/prism-manager-acceptance-lo1qz4na/manager/libraries/ca/weblite/java-objc-bridge/1.1/java-objc-bridge-1.1.jar"
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "entry": "libjtracy-jni-macos-arm64.dylib",
+        "name": "libjtracy-jni-macos-arm64.dylib",
+        "sha256": "07a220e8bd347dbc19a22486daeb259bb625b60e797dde45c13fb1adf0b61d60",
+        "size": 715024,
+        "source": "/private/tmp/prism-manager-acceptance-lo1qz4na/manager/libraries/com/mojang/jtracy-natives-macos-arm64/1.14.38/jtracy-natives-macos-arm64-1.14.38.jar"
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "entry": "com/sun/jna/darwin-aarch64/libjnidispatch.jnilib",
+        "name": "libjnidispatch.jnilib",
+        "sha256": "70c9af22ba3ce12128881b4654422ce69a6f96fc238333731cf718601b536245",
+        "size": 159800,
+        "source": "/private/tmp/prism-manager-acceptance-lo1qz4na/manager/libraries/net/java/dev/jna/jna/5.17.0/jna-5.17.0.jar"
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "entry": "macos/arm64/org/lwjgl/freetype/libfreetype.dylib",
+        "name": "libfreetype.dylib",
+        "sha256": "dcfcff8441c801e35a061d5480a9560a67c423bab92848091249b4a69f181d2c",
+        "size": 2240352,
+        "source": "/private/tmp/prism-manager-acceptance-lo1qz4na/manager/libraries/org/lwjgl/lwjgl-freetype-natives-macos-arm64/3.4.3/lwjgl-freetype-natives-macos-arm64-3.4.3.jar"
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "entry": "macos/arm64/org/lwjgl/jemalloc/libjemalloc.dylib",
+        "name": "libjemalloc.dylib",
+        "sha256": "a45ca6b29da4d39c55f24f7d5bf9a6c644d687c7a92a8535b3080d2c980ac045",
+        "size": 354000,
+        "source": "/private/tmp/prism-manager-acceptance-lo1qz4na/manager/libraries/org/lwjgl/lwjgl-jemalloc-natives-macos-arm64/3.4.3/lwjgl-jemalloc-natives-macos-arm64-3.4.3.jar"
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "entry": "macos/arm64/org/lwjgl/liblwjgl.dylib",
+        "name": "liblwjgl.dylib",
+        "sha256": "aba5da29975f74cebad12303702a40a62f7aab7276a015548575005cd942a952",
+        "size": 326160,
+        "source": "/private/tmp/prism-manager-acceptance-lo1qz4na/manager/libraries/org/lwjgl/lwjgl-natives-macos-arm64/3.4.3/lwjgl-natives-macos-arm64-3.4.3.jar"
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "entry": "macos/arm64/org/lwjgl/openal/libopenal.dylib",
+        "name": "libopenal.dylib",
+        "sha256": "a900a80458fa8a856c685eb7bdfbb2a5af359abfd3b902e21ff887c1eae1af32",
+        "size": 1253624,
+        "source": "/private/tmp/prism-manager-acceptance-lo1qz4na/manager/libraries/org/lwjgl/lwjgl-openal-natives-macos-arm64/3.4.3/lwjgl-openal-natives-macos-arm64-3.4.3.jar"
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "entry": "macos/arm64/org/lwjgl/opengl/liblwjgl_opengl.dylib",
+        "name": "liblwjgl_opengl.dylib",
+        "sha256": "c22ce8a3bcbc925aa1ee933af8b231abb8b941ef4e08600f4379075c725c09a3",
+        "size": 163592,
+        "source": "/private/tmp/prism-manager-acceptance-lo1qz4na/manager/libraries/org/lwjgl/lwjgl-opengl-natives-macos-arm64/3.4.3/lwjgl-opengl-natives-macos-arm64-3.4.3.jar"
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "entry": "macos/arm64/org/lwjgl/sdl/libSDL3.dylib",
+        "name": "libSDL3.dylib",
+        "sha256": "66a3941188f9415835a83c3a10ec0fbd80e5e1285f53560981112f790076c5ce",
+        "size": 2492688,
+        "source": "/private/tmp/prism-manager-acceptance-lo1qz4na/manager/libraries/org/lwjgl/lwjgl-sdl-natives-macos-arm64/3.4.3/lwjgl-sdl-natives-macos-arm64-3.4.3.jar"
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "entry": "macos/arm64/org/lwjgl/shaderc/libshaderc.dylib",
+        "name": "libshaderc.dylib",
+        "sha256": "113c96b77e6a32eabdf9583402fe138921f08c64d7818534100d1380f32b6b6d",
+        "size": 6293592,
+        "source": "/private/tmp/prism-manager-acceptance-lo1qz4na/manager/libraries/org/lwjgl/lwjgl-shaderc-natives-macos-arm64/3.4.3/lwjgl-shaderc-natives-macos-arm64-3.4.3.jar"
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "entry": "macos/arm64/org/lwjgl/spng/liblwjgl_spng.dylib",
+        "name": "liblwjgl_spng.dylib",
+        "sha256": "0964a8d9c815350b77544e0f8865569b9c1a50d3d15d6c237ef12035ae40da96",
+        "size": 172032,
+        "source": "/private/tmp/prism-manager-acceptance-lo1qz4na/manager/libraries/org/lwjgl/lwjgl-spng-natives-macos-arm64/3.4.3/lwjgl-spng-natives-macos-arm64-3.4.3.jar"
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "entry": "macos/arm64/org/lwjgl/spvc/libspirv-cross.dylib",
+        "name": "libspirv-cross.dylib",
+        "sha256": "098a3c0e46d1180ac63731b3e600a9b03b98f15b665aef866e519c7329003299",
+        "size": 2679800,
+        "source": "/private/tmp/prism-manager-acceptance-lo1qz4na/manager/libraries/org/lwjgl/lwjgl-spvc-natives-macos-arm64/3.4.3/lwjgl-spvc-natives-macos-arm64-3.4.3.jar"
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "entry": "macos/arm64/org/lwjgl/stb/liblwjgl_stb.dylib",
+        "name": "liblwjgl_stb.dylib",
+        "sha256": "e6bc5581344e1fcf541b6e0bf54ee7565f958a40bc98a1e1cb909a9f3e95d0a3",
+        "size": 422560,
+        "source": "/private/tmp/prism-manager-acceptance-lo1qz4na/manager/libraries/org/lwjgl/lwjgl-stb-natives-macos-arm64/3.4.3/lwjgl-stb-natives-macos-arm64-3.4.3.jar"
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "entry": "macos/arm64/org/lwjgl/vma/liblwjgl_vma.dylib",
+        "name": "liblwjgl_vma.dylib",
+        "sha256": "e2d92caba679f6351a37e55102dc347360bf99f45f822d42b583b8b9b0ba7d51",
+        "size": 184400,
+        "source": "/private/tmp/prism-manager-acceptance-lo1qz4na/manager/libraries/org/lwjgl/lwjgl-vma-natives-macos-arm64/3.4.3/lwjgl-vma-natives-macos-arm64-3.4.3.jar"
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "entry": "macos/arm64/org/lwjgl/vulkan/libMoltenVK.dylib",
+        "name": "libMoltenVK.dylib",
+        "sha256": "0ff7685e584df2de44cf0c44a182916f977b0dd9d5759076bea8c83a362e556a",
+        "size": 3798016,
+        "source": "/private/tmp/prism-manager-acceptance-lo1qz4na/manager/libraries/org/lwjgl/lwjgl-vulkan-natives-macos-arm64/3.4.3/lwjgl-vulkan-natives-macos-arm64-3.4.3.jar"
+      }
+    ],
+    "runtimeFiles": [
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "bin/jar",
+        "sha256": "d5ebb11532a0ba296463daca83d13062a8aa9c2aa32b28492945c02c122c99b9",
+        "size": 84624
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "bin/jarsigner",
+        "sha256": "61fc709a0babd01960c275e1875d65af3325507c891405de0d538f97baed6ed7",
+        "size": 84640
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "bin/java",
+        "sha256": "e0879c0df70d880d66904064d1b388b08aeee0958a047f37601435b28db849a3",
+        "size": 84720
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "bin/javac",
+        "sha256": "46b2f3452f6145ac37796a494c20a49b2c884e4eac59cbaa4e642730b57d64fa",
+        "size": 84640
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "bin/javadoc",
+        "sha256": "b397eaf03f16a53bc12218cf5da2539f8d282fc87f2ca531d0101e476afc4055",
+        "size": 84640
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "bin/javap",
+        "sha256": "197a897f83e328c784de64b1452b8166ae17b06eba62cb14fc2115a52f88a200",
+        "size": 84640
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "bin/jcmd",
+        "sha256": "1e01f29ffb70aad1be24b1433cf9fe666502bb4050af3584e7fa1126aa60c84c",
+        "size": 84640
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "bin/jconsole",
+        "sha256": "95138fa794b04cb05f44aeea782fc88cf67bb2b70af08c6a2bd32d5709da5781",
+        "size": 84640
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "bin/jdb",
+        "sha256": "dea692c272bb4cbe79bae1054d336d85ae062d8940ca06c6e8340a62618e7f7b",
+        "size": 84624
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "bin/jdeprscan",
+        "sha256": "61e9ca28a02d510b31b35a4acd33841f67db21ab1e4dd8a7a4c652c3d7fe9448",
+        "size": 84640
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "bin/jdeps",
+        "sha256": "22841b89682189e927012593070d067b2a465fdf1e5b22a49a79ac7a73773bbb",
+        "size": 84640
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "bin/jfr",
+        "sha256": "4e58a42048d10799093c74eea81e1bca0601cd0f80be7a57a53fa9b1770c8d38",
+        "size": 84624
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "bin/jhsdb",
+        "sha256": "d7d7ed44a54d0abf375470e634a77288d6515e19b7004dcc9ed825be3b433546",
+        "size": 84640
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "bin/jimage",
+        "sha256": "0ad88c9a79c7346fca76382679ea42706f4b26993420846af5f2c8505fca526d",
+        "size": 84640
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "bin/jinfo",
+        "sha256": "668636acf89a32f2a5bd28af06513520f04657a1bbbd2d2ea607b3771fac640a",
+        "size": 84640
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "bin/jlink",
+        "sha256": "f5081655c2dafa41f8047c3bec4aaf886c58969ef19eb346d15f8742e3d40f3d",
+        "size": 84640
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "bin/jmap",
+        "sha256": "37d0e5aa8f5b3d857aff85c80e4c4ff3cac1dcaeedd7e6316bd4aa6a2ca2db7b",
+        "size": 84640
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "bin/jmod",
+        "sha256": "40cc3146fb2f50fb9cc867dfa4d939d10398c147b3f168346ed8b13c2823c4fd",
+        "size": 84640
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "bin/jnativescan",
+        "sha256": "c4fbc60b52c5668350e2f76222452463d2fd4f73cf63ee5df401300250a28c79",
+        "size": 84640
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "bin/jpackage",
+        "sha256": "5e0534a48e46993a9723866eb7aea44a6fd5313b6e25baaebb86c84ab558f973",
+        "size": 84640
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "bin/jps",
+        "sha256": "eb7ef20f40bb9b73085716c9d9ea18dcd1f75c840dcdba54d48ce5fe4803b7ea",
+        "size": 84624
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "bin/jrunscript",
+        "sha256": "a4417edca23d2a3060abab87056ecc9ad3a5b8064f6c4bc492471ac30c4a441a",
+        "size": 84640
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "bin/jshell",
+        "sha256": "18ab539d127598c4ae01f41dc4b58a09402aa671356432947f3d9c1db931a177",
+        "size": 84640
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "bin/jstack",
+        "sha256": "51bd2d73c6c49279cf796381e8ec51ac37918bda2c238af20b22768cb5b6cbdb",
+        "size": 84640
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "bin/jstat",
+        "sha256": "b5ce73d8dcb7b5dfa39541569dbc6ac4e9d8621b408c2f97a85e5eba95c70ce9",
+        "size": 84640
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "bin/jstatd",
+        "sha256": "61b23e8874b0be9a6607d2776e1ad8a785d0af0b7b78c09ddf0cd63929ffce23",
+        "size": 84640
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "bin/jwebserver",
+        "sha256": "3ff1f60aff7fa5593620a066851de80ece8d495b2568241eb146bb8fcad85b96",
+        "size": 84640
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "bin/keytool",
+        "sha256": "254a0ef900a242c538eacd014d550a425ce71cf7f9923f4dcd592823895abb68",
+        "size": 84640
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "bin/rmiregistry",
+        "sha256": "166f46ce2569a8de31ee8b82881546141dc9215d93869ba7d2c4eda46bed65e7",
+        "size": 84640
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "bin/serialver",
+        "sha256": "1fcd7cdc20c56224d1f33691a460461506cfae2dfec19a591285b4b21fbfe5e2",
+        "size": 84640
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "lib/jspawnhelper",
+        "sha256": "ecc45d975f331cced81d951059d1eaf12fc6592329b623873d2d64d702a280a8",
+        "size": 85664
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "lib/libattach.dylib",
+        "sha256": "3de61509095a5968eda06d1663215c3a2972510e2f1dc1251b7d69ec71ab15aa",
+        "size": 85408
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "lib/libawt.dylib",
+        "sha256": "2d8d7be2344c34cd72ead25260588b86dcd6a1a3166c1549284ebc44632e5d6f",
+        "size": 564944
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "lib/libawt_lwawt.dylib",
+        "sha256": "e1d43d906618e2482d87d8d825d2ec8cb554681d70ef36eb2f43d26b012770ef",
+        "size": 1249184
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "lib/libdt_socket.dylib",
+        "sha256": "8c3f6d5c4b5141a9806685de0cba7ddb420fc6a4882d78ef5d5ca587b70718e7",
+        "size": 87520
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "lib/libextnet.dylib",
+        "sha256": "d6a065f9f5e49fd9a639ff092ce664f5ea1fafd0f0cd6dd3bd4154263a9f8497",
+        "size": 84544
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "lib/libfontmanager.dylib",
+        "sha256": "6a66b1ed77920b284a3aa23fce6d492bcbb3093286d4d4b4bfbb835b82ad971f",
+        "size": 1383872
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "lib/libfreetype.dylib",
+        "sha256": "9dc6bf6530b4b27694707cb2c71840cf61c04dfef8f66bef6dad77b4bc9ef561",
+        "size": 659904
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "lib/libinstrument.dylib",
+        "sha256": "6fb9be58abd1f28384d64718ab4aed2515729d00a270a451c72a25d3520d4d51",
+        "size": 106000
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "lib/libj2gss.dylib",
+        "sha256": "ed48c4794a06c6fd59097dadb550641590755304bed09a05cff3c32048073d1a",
+        "size": 106480
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "lib/libj2pcsc.dylib",
+        "sha256": "a0f56712c1905b38f1af95a5e5765f498b38a2893f1c5b98e4a0771aa9b4bdfa",
+        "size": 85136
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "lib/libj2pkcs11.dylib",
+        "sha256": "0a05bfb264fb6837dde55a3fbb70303f9f29e7dd6f1076278e1ccd8f25bba59a",
+        "size": 144832
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "lib/libjaas.dylib",
+        "sha256": "903a32b80dd6996218d583d5f595ba2887d0509b44516e766377e1681ebe18cb",
+        "size": 83520
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "lib/libjava.dylib",
+        "sha256": "b16d0ee5a8ace12b76b75c53ae69efdd06e67320d43d966f339ee02d15125614",
+        "size": 200000
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "lib/libjavajpeg.dylib",
+        "sha256": "74495692e082cc9c3c18b7001bb4846c3becdd7842bd3fa468b9538cad50ae93",
+        "size": 278640
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "lib/libjawt.dylib",
+        "sha256": "02dcb9e034b13bb0192f868400165e14a3120eec22703f221546ec7b8392e0b4",
+        "size": 66928
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "lib/libjdwp.dylib",
+        "sha256": "1e4e0c1b1ca701073cfacfdee558f76cee97e4abd0cafdcef6fe34ee9974f030",
+        "size": 326000
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "lib/libjimage.dylib",
+        "sha256": "19251a7e81c7393f56dd9c57b08e724ab888d80e9874cc41784d73e30681411c",
+        "size": 91136
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "lib/libjli.dylib",
+        "sha256": "1ee30220fabce8d24de16f1b130844cdf954c160f015fc6f254bd283e05f84a1",
+        "size": 162624
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "lib/libjsig.dylib",
+        "sha256": "63062bd10c429f92551e24bac58396abbbd3da5fd49d0fc78e2558effd4c8945",
+        "size": 84464
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "lib/libjsound.dylib",
+        "sha256": "b5c8181921d1923b0ca80b469021dfffc210fbd198bf72368d38ca769a145c7b",
+        "size": 149520
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "lib/liblcms.dylib",
+        "sha256": "7712a4fe26665dcf242b19cd9de6b466cb73b67f90c3b65251ec5a0ac92ad3b3",
+        "size": 407088
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "lib/libmanagement.dylib",
+        "sha256": "30d0577735d6ac48bcd0f8d99080ae440cc53e5a900c926668d4f7cac74e080d",
+        "size": 90960
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "lib/libmanagement_agent.dylib",
+        "sha256": "02a9f4213f099a7c372d999772e9915a856ad1fd7893d0aa6b453ca05ec72485",
+        "size": 83472
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "lib/libmanagement_ext.dylib",
+        "sha256": "9e31037eb5676a65987504f36d5385adae91f3ada5c445abb6790fdd3ceb8563",
+        "size": 88832
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "lib/libmlib_image.dylib",
+        "sha256": "3c874155c794721d914059051f894bdd1b11b8512f116ab66e236248591a2ea2",
+        "size": 521392
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "lib/libnet.dylib",
+        "sha256": "a404aa001d06fc57174f8a789cae372bce99a03f08e25cc663c54129d0211540",
+        "size": 127824
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "lib/libnio.dylib",
+        "sha256": "3db3613e31d1a5cd6225d6f65b25ec20f193e7bbec6db957c5735b8220700b23",
+        "size": 140816
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "lib/libosx.dylib",
+        "sha256": "de7d1af7b6dd13f77de6b8557472169a164f6c3330bc912c537f8d9b4eabc783",
+        "size": 88224
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "lib/libosxapp.dylib",
+        "sha256": "0955d4edd08d4a93a23a3f7a63be4b0cd48c288bcb90a9a22e5e58f0cf711d7c",
+        "size": 203232
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "lib/libosxkrb5.dylib",
+        "sha256": "1ad30dc474bd1c3073019fec4f210656fce0b7b81a0baeb872755b6da10b8c04",
+        "size": 88080
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "lib/libosxsecurity.dylib",
+        "sha256": "07343d8c8365fe79cff6684483fe271e9d0a77e47147809f6256e1448d896c50",
+        "size": 89568
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "lib/libosxui.dylib",
+        "sha256": "622c6521cef56b2bc82e8fdf06a39c167c64493a7b488c38f2c04d6aa22b1884",
+        "size": 113120
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "lib/libprefs.dylib",
+        "sha256": "8c1b83d9783f7d20b71099155b5173f140add1d24a1b51ad51375786b96c0902",
+        "size": 88080
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "lib/librmi.dylib",
+        "sha256": "3f86a5770067133f17d63a32cf6a18cd0acd42ef2550eccec064a6e55631336c",
+        "size": 83152
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "lib/libsaproc.dylib",
+        "sha256": "5fa13b4295cb409c839a2020d8ec9fc4eb066464b5969440c1feb8f98ad8bdfb",
+        "size": 125632
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "lib/libsleef.dylib",
+        "sha256": "313eeee30a8ac135d127f17ef1b1b5f28c8cb1362341cab473bbceaf5e863e4a",
+        "size": 101712
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "lib/libsplashscreen.dylib",
+        "sha256": "afa92f9d1fbad87f7aaf32ff8578cee6f829f5c2a6931a06f43177d7ebdbaf73",
+        "size": 406224
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "lib/libsyslookup.dylib",
+        "sha256": "781f7af5f92ff16131a9bcb08641248d58703be42877c3f1cbcc049420d9a0ee",
+        "size": 49872
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "lib/libverify.dylib",
+        "sha256": "4879b9a60131f8c4922f9aa54b2eceb38efd19b819c695d2e17f93d4b0653126",
+        "size": 120352
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "lib/libzip.dylib",
+        "sha256": "d5824ccdc5cefd45570b1aa70f1ccd10db0f4f32ba176c89be9b7da56317f1a9",
+        "size": 176160
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "lib/server/libjsig.dylib",
+        "sha256": "63062bd10c429f92551e24bac58396abbbd3da5fd49d0fc78e2558effd4c8945",
+        "size": 84464
+      },
+      {
+        "architectures": [
+          "arm64"
+        ],
+        "path": "lib/server/libjvm.dylib",
+        "sha256": "fdcf9b0e7616bccaa482de92cd5f669b01c926cfd7e4dbfa62af6b96b4c98975",
+        "size": 19443488
+      }
+    ],
+    "runtimeOrigin": "/private/tmp/prism-manager-acceptance-lo1qz4na/cache/java/java-runtime-epsilon/jre.bundle/Contents/Home",
+    "signingProfile": "adhoc-inherited-jvm-v1"
+  }
+}

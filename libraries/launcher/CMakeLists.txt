@@ -5,6 +5,9 @@ find_package(Java 1.7 REQUIRED COMPONENTS Development)
 include(UseJava)
 set(CMAKE_JAVA_JAR_ENTRY_POINT org.prismlauncher.EntryPoint)
 set(CMAKE_JAVA_COMPILE_FLAGS -target 7 -source 7)
+if(Launcher_MACOS_SANDBOX_MANAGER)
+    set(CMAKE_JAVA_COMPILE_FLAGS --release 8 -Xlint:-options)
+endif()
 
 set(SRC
     org/prismlauncher/EntryPoint.java
@@ -42,3 +45,7 @@ add_jar(NewLaunch ${SRC})
 add_jar(NewLaunchLegacy ${LEGACY_SRC} INCLUDE_JARS NewLaunch)
 install_jar(NewLaunch "${JARS_DEST_DIR}")
 install_jar(NewLaunchLegacy "${JARS_DEST_DIR}")
+if(Launcher_MACOS_SANDBOX_MANAGER)
+    add_jar(SandboxNativeBridge ca/weblite/nativeutils/NativeUtils.java)
+    install_jar(SandboxNativeBridge "${JARS_DEST_DIR}")
+endif()

@@ -343,7 +343,7 @@ void IconList::installIcon(const QString& file, const QString& name)
         qWarning() << "Installing icon to list -" << target.error();
         return;
     }
-    QFile::copy(file, target.value());
+    FS::copyFile(file, target.value());
 }
 
 bool IconList::iconFileExists(const QString& key) const

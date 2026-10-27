@@ -65,7 +65,13 @@ class MinecraftInstance : public BaseInstance {
     // FIXME: remove
     QSet<QString> traits() const override;
 
-    bool canEdit() const override { return true; }
+    bool canEdit() const override {
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+        return !isRunning();
+#else
+        return true;
+#endif
+    }
 
     bool canExport() const override { return true; }
 

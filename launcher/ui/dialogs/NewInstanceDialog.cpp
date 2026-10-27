@@ -66,6 +66,9 @@
 #include "ui/pages/modplatform/legacy_ftb/Page.h"
 #include "ui/pages/modplatform/modrinth/ModrinthPage.h"
 #include "ui/pages/modplatform/technic/TechnicPage.h"
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+#include "macsandbox/manager/SandboxPages.h"
+#endif
 #include "ui/widgets/PageContainer.h"
 
 NewInstanceDialog::NewInstanceDialog(const QString& initialGroup,
@@ -203,6 +206,9 @@ QList<BasePage*> NewInstanceDialog::getPages()
     m_importPage = new ImportPage(this);
 
     pages.append(new CustomPage(this));
+#ifdef PRISM_MACOS_SANDBOX_MANAGER
+    pages.append(new SandboxJarPage(this));
+#endif
     pages.append(m_importPage);
     pages.append(new AtlPage(this));
     if (APPLICATION->capabilities() & Application::SupportsFlame) {
